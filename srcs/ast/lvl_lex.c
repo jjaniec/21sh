@@ -1,37 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_echo.c                                     :+:      :+:    :+:   */
+/*   lvl_lex.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/25 17:33:25 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/08/09 16:44:49 by jjaniec          ###   ########.fr       */
+/*   Created: 2018/08/11 18:52:33 by jjaniec           #+#    #+#             */
+/*   Updated: 2018/08/11 18:52:50 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <twenty_one_sh.h>
 
-static void	expanse_var(const char *str, const char **envp)
-{
-	str++;
-	if (*str)
-		ft_putstr(get_env(str, envp));
-}
+/*
+** Get the right level of a lexeme, 0 is being high priority, 4 low priority
+*/
 
-void		builtin_echo(char **argv, char **envp, t_exec *exe)
+int				lvl_lex(t_lexeme *lex)
 {
-	(void)exe;
-	argv++;
-	while (*argv)
-	{
-		if ((*argv)[0] == '$')
-			expanse_var(*argv, (const char **)envp);
-		else
-			ft_putstr(*argv);
-		if (argv[1])
-			ft_putchar(' ');
-		argv++;
-	}
-	ft_putchar('\n');
+	int		lvl;
+
+	lvl = 5;
+	if (is_op0(lex))
+		lvl = 0;
+	else if (lvl > 1 && is_op1(lex))
+		lvl = 1;
+	else if (lvl > 2 && is_op1_5(lex))
+		lvl = 2;
+	else if (lvl > 3 && is_op2(lex))
+		lvl = 3;
+	else if (lvl > 4 && is_op3(lex))
+		lvl = 4;
+	return (lvl);
 }

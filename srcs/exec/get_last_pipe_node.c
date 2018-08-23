@@ -1,37 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_echo.c                                     :+:      :+:    :+:   */
+/*   get_last_pipe_node.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/25 17:33:25 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/08/09 16:44:49 by jjaniec          ###   ########.fr       */
+/*   Created: 2018/07/23 18:24:16 by jjaniec           #+#    #+#             */
+/*   Updated: 2018/08/14 19:26:02 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <twenty_one_sh.h>
 
-static void	expanse_var(const char *str, const char **envp)
-{
-	str++;
-	if (*str)
-		ft_putstr(get_env(str, envp));
-}
+/*
+** Look for pipes in ast before && and || tokens,
+** if found, return pointer to node,
+** otherwise return NULL
+*/
 
-void		builtin_echo(char **argv, char **envp, t_exec *exe)
+t_ast		*get_last_pipe_node(t_ast *node)
 {
-	(void)exe;
-	argv++;
-	while (*argv)
-	{
-		if ((*argv)[0] == '$')
-			expanse_var(*argv, (const char **)envp);
-		else
-			ft_putstr(*argv);
-		if (argv[1])
-			ft_putchar(' ');
-		argv++;
-	}
-	ft_putchar('\n');
+	t_ast	*ptr;
+
+	ptr = node;
+	while (ptr && ptr->parent && ptr->type != T_CTRL_OPT)
+		ptr = ptr->parent;
+	if (ptr && ptr->type_details == TK_PIPE)
+		return (ptr);
+	return (NULL);
 }

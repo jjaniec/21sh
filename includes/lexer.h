@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/12 15:14:05 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/07/19 14:47:35 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/08/18 15:37:06 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,13 @@
 
 # define T_REDIR_OPT		4
 
-# define TK_LESS			41
-# define TK_GREAT			42
-# define TK_CLOBBER			43
-# define TK_DGREAT			44
-# define TK_DLESS			45
-# define TK_DLESSDASH		46
+# define TK_LESS			40
+# define TK_GREAT			41
+# define TK_CLOBBER			42
+# define TK_DGREAT			43
+# define TK_DLESS			44
+# define TK_DLESSDASH		45
+# define TK_TLESS			46
 # define TK_LESSAND			47
 # define TK_GREATAND		48
 # define TK_LESSGREAT		49

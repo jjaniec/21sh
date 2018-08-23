@@ -1,37 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_echo.c                                     :+:      :+:    :+:   */
+/*   handle_redir_fd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/25 17:33:25 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/08/09 16:44:49 by jjaniec          ###   ########.fr       */
+/*   Created: 2018/07/20 13:21:13 by jjaniec           #+#    #+#             */
+/*   Updated: 2018/08/19 22:05:47 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <twenty_one_sh.h>
 
-static void	expanse_var(const char *str, const char **envp)
-{
-	str++;
-	if (*str)
-		ft_putstr(get_env(str, envp));
-}
+/*
+** Handle redirections to fds ex: 2>&1
+*/
 
-void		builtin_echo(char **argv, char **envp, t_exec *exe)
+void		handle_redir_fd(int input_fd, int target_fd)
 {
-	(void)exe;
-	argv++;
-	while (*argv)
-	{
-		if ((*argv)[0] == '$')
-			expanse_var(*argv, (const char **)envp);
-		else
-			ft_putstr(*argv);
-		if (argv[1])
-			ft_putchar(' ');
-		argv++;
-	}
-	ft_putchar('\n');
+	log_trace("\tRedir fd %d -> %d", input_fd, target_fd);
+	dup2(target_fd, input_fd);
 }

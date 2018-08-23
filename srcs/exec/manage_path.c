@@ -6,28 +6,11 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/25 11:08:25 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/08/04 17:29:47 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/08/09 16:41:07 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <twenty_one_sh.h>
-
-/*
-** Check if function is a builtin
-*/
-
-int		is_builtin(char *cmd)
-{
-	if (ft_strequ(cmd, "echo")
-	|| ft_strequ(cmd, "cd")
-	|| ft_strequ(cmd, "setenv")
-	|| ft_strequ(cmd, "unsetenv")
-	|| ft_strequ(cmd, "env")
-	|| ft_strequ(cmd, "exit"))
-		return (1);
-	else
-		return (0);
-}
 
 /*
 ** Take in a path (like "/usr/bin") and a name (like "open").

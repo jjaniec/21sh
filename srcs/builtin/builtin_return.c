@@ -1,37 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_echo.c                                     :+:      :+:    :+:   */
+/*   builtin_return.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/25 17:33:25 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/08/09 16:44:49 by jjaniec          ###   ########.fr       */
+/*   Created: 2018/08/09 16:38:37 by jjaniec           #+#    #+#             */
+/*   Updated: 2018/08/09 17:12:29 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <twenty_one_sh.h>
 
-static void	expanse_var(const char *str, const char **envp)
+void	builtin_return(char **argv, char **envp, t_exec *exe)
 {
-	str++;
-	if (*str)
-		ft_putstr(get_env(str, envp));
-}
+	(void)envp;
 
-void		builtin_echo(char **argv, char **envp, t_exec *exe)
-{
-	(void)exe;
-	argv++;
-	while (*argv)
-	{
-		if ((*argv)[0] == '$')
-			expanse_var(*argv, (const char **)envp);
-		else
-			ft_putstr(*argv);
-		if (argv[1])
-			ft_putchar(' ');
-		argv++;
-	}
-	ft_putchar('\n');
+	exe->ret = ft_atoi(argv[1]);
 }

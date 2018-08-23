@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/13 15:35:59 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/07/19 15:01:51 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/08/18 15:43:57 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,12 @@ static size_t	lexeme_type_rediropt(char *s, int *pos, \
 		if (s[1] == '&' || s[1] == '>' || \
 			(*s == '>' && s[1] == '|') || (s[1] == *s))
 		{
-			if (*s == '<' && s[1] == *s && s[2] == '-')
+			if (*s == '<' && s[1] == *s && (s[2] == *s || s[2] == '-'))
 			{
-				*type_details = TK_DLESSDASH;
+				if (s[2] == '-')
+					*type_details = TK_DLESSDASH;
+				else if (s[2] == *s)
+					*type_details = TK_TLESS;
 				data_len = 3;
 			}
 			else
