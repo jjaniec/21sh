@@ -68,9 +68,7 @@ static t_ast	*place_new_node(t_ast *root, t_ast *new)
 t_ast			*construct_ast(t_lexeme *lex, t_ast *root)
 {
 	t_ast	*new;
-	int		flag_heredoc_EOF;
 
-	flag_heredoc_EOF = 0;
 	while (lex)
 	{
 		new = create_node(lex->type, lex->type_details, \

@@ -23,12 +23,8 @@ static t_exec	*loop_body(char *input, char **envp)
 		log_set_quiet(1);
 	lex = lexer(input);
 	ast_root = ast(lex);
-	exe = create_exec((const char **)envp);
 	if (!ast_root)
-	{
-		free_lexemes(lex);
-		return (exe);
-	}
+		exit(1);
 	exe = create_exec((const char **)envp);
 	exe = exec_cmd(ast_root, exe);
 	ast_free(ast_root);

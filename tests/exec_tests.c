@@ -95,18 +95,7 @@ static void	comp_output_redir(char *test_name, char *test, char *data_expected)
 void	exec_tests(char **envp)
 {
 	(void)envp;
-  int		tk_less_tests_tmp_fd;
-
-	/*exec_diff("ls -z || ls");
-	exec_diff("pwd; cd .. && ls;  echo test");
-	exec_diff("ls -z && pwd || echo ABC");
-	exec_diff("ls -z && pwd && echo ABC");
-	exec_diff("ls -z || pwd || echo ABC");
-	exec_diff("ls -z || pwd && echo ABC");
-	exec_diff("ls -z || pwd || echo ABC");
-	exec_diff("cd .. && pwd");
-	exec_diff("cd .. && echo '-' && cd ~ && pwd");
-	exec_diff("cd / && pwd && cd ~ && ls && cd /usr && ls && cd - && ls && cd && ls");*/
+	int		tk_less_tests_tmp_fd;
 
 	exec_diff("Simple unique", "/bin/echo a");
 	exec_diff("Simple OR", "/bin/echo a || /bin/echo b");
