@@ -57,7 +57,7 @@ SRC_NAME = 	is_separator.c \
 			line_edition/set_term_attr.c \
 			line_edition/write_one_char.c \
 			ast/ast_free.c \
-            ast/prepare_argv.c \
+			ast/prepare_argv.c \
 			exec/exec.c \
 			exec/exec_pre_in_post.c \
 			exec/exec_thread.c \
@@ -82,6 +82,7 @@ SRC_NAME = 	is_separator.c \
 			builtin/is_builtin.c \
 			log.c \
 			ft_free_argv.c \
+			sub_prompt.c \
 			main.c
 
 INCLUDES_NAME = lexer.h \
@@ -104,7 +105,6 @@ TESTS_DIR = ./tests/
 OBJ_DIR = ./objs/
 OBJ_SUBDIRS = lexer/ ast/ exec/ builtin/ line_edition/
 FT_PRINTF_DIR = ./ft_printf/
-LIBTAP_DIR = libtap
 
 ###### SRC / OBJ ######
 SRC = $(addprefix $(SRC_DIR), $(SRC_NAME))

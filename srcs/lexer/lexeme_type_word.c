@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/14 14:44:31 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/07/04 13:04:46 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/07/23 15:01:15 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,7 @@ static int	skip_quotes_substring(char *s, int *pos, int start)
 
 	quote_pos = has_matching_quote(s, start);
 	if (!(quote_pos))
-	{
-		ft_printf("42sh: Error: Unmatched %c\n", s[start]);
 		return (UNMATCHED_QUOTE_ERR);
-	}
 	*pos = ((quote_pos - s) / sizeof(char));
 	return (0);
 }

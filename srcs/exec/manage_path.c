@@ -73,7 +73,8 @@ char	*isin_path(char **paths, char *cmd)
 		ft_strdel(&pth);
 		i++;
 	}
-	ft_putstr_fd("21sh: no such file or directory: ", 2);
-	ft_putendl_fd(cmd, 2);
+	ft_putstr_fd("21sh: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putendl_fd(": command not found", 2);
 	return (NULL);
 }

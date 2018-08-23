@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/12 15:19:12 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/07/19 15:04:29 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/07/23 15:16:32 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,10 @@ t_lexeme			*lexer(char *line)
 			if (r == UNMATCHED_QUOTE_ERR)
 			{
 				free_lexemes(lexemes);
-				return (NULL);
+				i = 0;
+				r = 1;
+				lexemes = NULL;
+				subp_string(&line);
 			}
 			else if (r == 0)
 				break ;

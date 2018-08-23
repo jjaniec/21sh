@@ -6,7 +6,7 @@
 /*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/25 16:29:25 by cyfermie          #+#    #+#             */
-/*   Updated: 2018/07/19 16:21:53 by cyfermie         ###   ########.fr       */
+/*   Updated: 2018/08/20 14:47:20 by sebastien        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,17 +67,6 @@ char			*line_edition(void)
 			fprintf(tty_debug, "key = %" PRIu64 "\n" , key_no); // debug
 
 		process_key(key_no, &le);
-
-fprintf(tty_debug, "--------------------------------------\n");
-		fprintf(tty_debug, "current cursor pos = %u\ncurrent cursor line = %u\n",
-		le.current_cursor_pos, le.current_cursor_line);
-		fprintf(tty_debug, "line index = %u\n", le.line_index);
-		fprintf(tty_debug, "cursor index for line = %u\n", le.cursor_index_for_line);
-		fprintf(tty_debug, "nb li currently writing = %u\n", le.nb_li_currently_writing);
-		fprintf(tty_debug, "nb_car_written_on_last_current_line = %u\n",
-		le.nb_car_written_on_last_current_line);
-fprintf(tty_debug, "--------------------------------------\n");
-
 
 		if (key_no == '\n')
 		{

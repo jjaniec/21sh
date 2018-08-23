@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 16:15:27 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/08/18 14:55:03 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/08/19 17:02:02 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@
 #  define VERBOSE_MODE 0
 # endif
 
+void		subp_string(char **s);
+t_lexeme	*subp_lexeme(t_lexeme *lex);
+void		subp_heredoc(t_lexeme *lex, char *eof_word);
 void	ft_free_argv(char **tab_);
 
 #endif
