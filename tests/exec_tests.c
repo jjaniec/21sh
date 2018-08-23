@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/27 17:24:03 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/08/21 21:29:50 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/08/23 19:48:22 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void	exec_tests(char **envp)
 	exec_diff("cd .. && echo '-' && cd ~ && pwd");
 	exec_diff("cd / && pwd && cd ~ && ls && cd /usr && ls && cd - && ls && cd && ls");*/
 
+	exec_diff("Simple unique", "/bin/echo a");
 	exec_diff("Simple OR", "/bin/echo a || /bin/echo b");
 	exec_diff("Simple AND", "/bin/echo a && /bin/echo b");
 	exec_diff("AND w/ cd;", "pwd; cd .. && /bin/echo a; /bin/echo b");

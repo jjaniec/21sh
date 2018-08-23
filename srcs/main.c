@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 16:19:06 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/08/19 17:30:22 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/08/23 19:53:28 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	main(int ac, char **av, char **envp)
 	if (!VERBOSE_MODE)
 		log_set_quiet(1);
 	if (ac > 1)
-		loop_body(av[1], cp_envp((const char **)envp));
+		loop_body(ft_strjoin(av[1], "\n"), cp_envp((const char **)envp));
 	else
 		twentyonesh(cp_envp((const char **)envp));
 	return (0);
