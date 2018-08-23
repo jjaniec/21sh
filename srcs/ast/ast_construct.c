@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/22 09:54:17 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/08/19 16:55:01 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/08/23 18:56:45 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ t_ast			*construct_ast(t_lexeme *lex, t_ast *root)
 	while (lex)
 	{
 		new = create_node(lex->type, lex->type_details, \
-			prepare_argv(lex));
+			prepare_argv(lex, flag_heredoc_EOF));
 		if (lvl_lex(lex) == 5)
 		{
 			if (lex->type == T_WORD)
@@ -82,13 +82,13 @@ t_ast			*construct_ast(t_lexeme *lex, t_ast *root)
 						prepare_argv(lex, flag_heredoc_EOF));
 			else
 				new = create_node(lex->type, lex->type_details, \
-						prepare_argv_simple(lex));
+						prepare_argv(lex, flag_heredoc_EOF));
 			while (lex->type == 2 && lex->next && lex->next->type == T_WORD)
 				lex = lex->next;
 		}
 		else
 			new = create_node(lex->type, lex->type_details, \
-					prepare_argv_simple(lex));
+					prepare_argv(lex, flag_heredoc_EOF));
 		flag_heredoc_EOF = 0;
 		if (lvl_lex(lex) == 4)
 		{
