@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/11 15:52:17 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/09/13 14:48:51 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/09/29 14:09:57 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char		**prepare_argv_operator(t_lexeme *lexemes)
 
 	if (!(argv = (char **)ft_memalloc(sizeof(char *) * 2)))
 		exit(MALLOC_ERROR);
-	argv[0] = lexemes->data;
+	argv[0] = ft_strdup(lexemes->data);
 	argv[1] = NULL;
 	return (argv);
 }
@@ -73,7 +73,7 @@ static char		**fill_argv_tab(char ***argv, t_lexeme *lexemes)
 	while (ptr && should_add_to_argv(ptr))
 	{
 		if (ptr->type == T_WORD)
-			(*argv)[i++] = ptr->data;
+			(*argv)[i++] = ft_strdup(ptr->data);
 		if (ptr->type == T_REDIR_OPT)
 			ptr = ptr->next;
 		if (ptr)

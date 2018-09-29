@@ -6,7 +6,7 @@
 /*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/25 17:21:10 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/19 17:17:36 by cyfermie         ###   ########.fr       */
+/*   Updated: 2018/09/29 15:59:45 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,6 @@ inline void	builtin_exit(char **argv, char **envp, t_exec *exe)
 	else
 		exit_val = exe->ret;
 	exit_free_sh_data(exe);
+	ast_free(*(access_ast_data()));
 	exit(exit_val);
 }

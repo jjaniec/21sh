@@ -1,42 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast_free.c                                         :+:      :+:    :+:   */
+/*   access_ast_data.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbrucker <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/28 17:23:59 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/29 16:03:03 by sbrucker         ###   ########.fr       */
+/*   Created: 2018/09/29 15:05:02 by sbrucker          #+#    #+#             */
+/*   Updated: 2018/09/29 15:16:40 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <twenty_one_sh.h>
 
-static void	free_argv(char **argv)
+void	link_ast_data(t_ast *new_ast_root)
 {
-	if (!argv)
-		return ;
-	while (*argv)
-	{
-		free(*argv);
-		argv++;
-	}
+	t_ast	**ast_root;
+
+	ast_root = access_ast_data();
+	*ast_root = new_ast_root;
 }
 
-static void	free_node(t_ast **ast)
+t_ast	**access_ast_data(void)
 {
-	free_argv(ast[0]->data);
-	free(ast[0]->data);
-	free(*ast);
-	*ast = NULL;
-}
+	static t_ast	*ast_root = NULL;
 
-void		ast_free(t_ast *ast)
-{
-	if (!ast)
-		return ;
-	//ast_free(ast->sub_ast);
-	ast_free(ast->left);
-	ast_free(ast->right);
-	free_node(&ast);
+	return (&ast_root);
 }
