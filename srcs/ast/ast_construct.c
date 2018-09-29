@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/22 09:54:17 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/14 11:37:54 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/09/29 13:33:13 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,7 @@ t_ast		*construct_ast(t_lexeme *lex, t_ast *root)
 				lex = lex->next;
 		flag_heredoc_EOF = 0;
 		if (lvl_lex(lex) == 4)
-		{
 			flag_heredoc_EOF = 1;
-			subp_heredoc(lex, lex->next->data);
-		}
 		root = place_new_node(root, new);
 		lex = lex->next;
 	}
