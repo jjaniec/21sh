@@ -6,7 +6,7 @@
 /*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/22 15:45:45 by cyfermie          #+#    #+#             */
-/*   Updated: 2018/09/19 19:10:39 by cyfermie         ###   ########.fr       */
+/*   Updated: 2018/09/24 13:54:59 by cgaspart         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int		get_le_debug_status(int mode, int new_value);
 /*
 **	Action Keys
 */
-# define LE_NB_KEYS (24)
+# define LE_NB_KEYS (25)
 # define LE_ARROW_UP ((27) + (91 << 1) + (65 << 2))
 # define LE_ARROW_DOWN ((27) + (91 << 1) + (66 << 2))
 # define LE_ARROW_RIGHT ((27) + (91 << 1) + (67 << 2))
@@ -55,6 +55,7 @@ int		get_le_debug_status(int mode, int new_value);
 # define LE_ALT_RIGHT ((27) + (27 << 1) + (91 << 2) + (67 << 3))
 # define LE_ALT_LEFT  ((27) + (27 << 1) + (91 << 2) + (68 << 3))
 # define LE_BACKSPACE (127)
+# define LE_TAB (9)
 # define LE_DELETE ((27) + (91 << 1) + (51 << 2) + (126 << 3))
 # define LE_CTRL_B (2)
 # define LE_CTRL_F (6)
@@ -125,26 +126,38 @@ struct s_le_state
 };
 
 /*
-**	nd : cursor moves one step right
+**	cl : clear screen
+**	md : begin bold mode
 **	le : cursor moves one step left
+**	nd : cursor moves one step right
 **	_do : (because 'do' is a standard keyword) cursor moves one line down
 **	up : cursor moves one line up
 **	dc : delete character under the cursor
-**	cl : clear screen
-**	md : begin bold mode
 **	me : end bold mode
+**	cr : cursor_pos 0
+**	sc : save cursor_pos
+**	rc : restore cursor from last save
+**	cd : clear all after cursor
+**	dl : Delete a line
+**	al : add a line
 */
 
 struct s_le_termcaps
 {
-	const char	*nd;
+	const char	*cl;
+	const char	*md;
 	const char	*le;
+	const char	*nd;
 	const char	*_do;
 	const char	*up;
 	const char	*dc;
-	const char	*cl;
-	const char	*md;
 	const char	*me;
+	const char	*cr;
+	const char	*sc;
+	const char	*rc;
+	const char	*cd;
+	const char	*dl;
+	const char	*al;
 };
 
 /*
@@ -156,7 +169,7 @@ struct s_le_termcaps
 **	cmd_size : size in bytes of the buffer 'cmd'.
 **	cmd_len : number of characters stored in the buffer 'cmd'.
 **	cursor_index : position of the cursor for the buffer 'cmd'.
-**	start_pos : starting position of the command line, 
+**	start_pos : starting position of the command line,
 **				depending on the prompt's length.
 **	cursor_pos : position of the cursor on its line (0 is the first position,
 **				 'term_line_size - 1' is the last position on the line).
@@ -164,15 +177,15 @@ struct s_le_termcaps
 **				  the first line, 'nb_lines_written - 1' is the last one).
 **	term_line_size : size of a line for the current window
 **					 (same as the number of columns).
-**	nb_lines_written : number of lines currently written for the 
+**	nb_lines_written : number of lines currently written for the
 **					   current command line.
-**	nb_char_on_last_line : number of characters currently written on the last 
+**	nb_char_on_last_line : number of characters currently written on the last
 **						   line of the current command line.
 **	clipboard : buffer containing the shell's clipboard.
 **	clipboard_size : size in bytes of the buffer 'clipboard'.
 **	clipboard_len : number of characters stored in the buffer 'clipboard'.
 **	tcaps : termcaps strings
-**	history : currently pointed element of the linked list representing 
+**	history : currently pointed element of the linked list representing
 **			  the shell's history.
 **	save_tmp_cmd : buffer useful to save the command line when navigating
 **				   into the shell's history.
@@ -298,7 +311,7 @@ void	refresh_colosyn(struct s_line *le, char *cmd);
 /*
 **	init_le
 */
-void					init_line_edition_attributes(struct s_line *le, 
+void					init_line_edition_attributes(struct s_line *le,
 													 int prompt_type);
 struct s_le_termcaps	*init_termcaps_strings(void);
 void					set_term_attr(t_set_term mode);
@@ -380,7 +393,7 @@ void *ft_realloc(void *, size_t, size_t); // tmp
 		history
 		!
 	}
-	
+
 
 */
 

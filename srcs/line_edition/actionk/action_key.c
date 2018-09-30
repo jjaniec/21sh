@@ -13,7 +13,7 @@
 #include <twenty_one_sh.h>
 
 /*
-**	Initialization of an array containing the correspondences between 
+**	Initialization of an array containing the correspondences between
 **	the action keys and their functions.
 */
 
@@ -44,7 +44,8 @@ static	struct s_action_key	*get_array_action_key(void)
 		{LE_ARROW_UP, &actionk_history_up},
 		{LE_ARROW_DOWN, &actionk_history_down},
 		{LE_CTRL_D, &actionk_eof},
-		{LE_CTRL_L, &actionk_clear_screen}
+		{LE_CTRL_L, &actionk_clear_screen},
+		{LE_TAB, &autocomplete}
 	};
 
 	return (actionk);

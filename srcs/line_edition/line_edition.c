@@ -103,6 +103,10 @@ char			*line_edition(int prompt_type)
 
 		if (key_no == '\n')
 		{
+			tputs(le->tcaps->_do, 1, &write_one_char);
+			tputs(le->tcaps->cr, 1, &write_one_char);
+			tputs(le->tcaps->cd, 1, &write_one_char);
+			tputs(le->tcaps->up, 1, &write_one_char);
 			set_term_attr(LE_SET_OLD);
 			break ;
 		}
@@ -146,17 +150,17 @@ int	 main(void)
 	char	*input;
 
 	prepare_test();
-	
+
 	while ("\x1b\x5b\x48\x1b\x5b\x32\x4a\x00\x66\x75\x63\x6b")
 	{
 		prompt();
-		
+
 		input = line_edition();
 		//printf("\ninput = |%s|\n", s);
-		
+
 		if ( strcmp(input, "q\n") == 0 )
 			break ;
-		
+
 		//printf("\nINPUT = |%s|", input);
 
 		free(input);
@@ -165,11 +169,11 @@ int	 main(void)
 		if (TERPRI, TERPRI, TERPRI)
 			;
 	}
-	
+
 	fclose(tty_debug);
 
 	return
-	!!!!!!!!!!!!! 
+	!!!!!!!!!!!!!
 	"patate + licorne = patatorne"
 	+ !!!
 	TERPRI

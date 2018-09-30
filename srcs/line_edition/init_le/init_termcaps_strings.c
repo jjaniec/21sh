@@ -19,7 +19,7 @@
 struct s_le_termcaps	*init_termcaps_strings(void)
 {
 	static struct s_le_termcaps tc;
-	
+
 	if ((tc.nd = tgetstr("nd", NULL)) == NULL)
 		le_exit("Failed to initialize \"nd\" termcap\n", "tgetstr", errno);
 	if ((tc.le = tgetstr("le", NULL)) == NULL)
@@ -35,6 +35,14 @@ struct s_le_termcaps	*init_termcaps_strings(void)
 	if ((tc.md = tgetstr("md", NULL)) == NULL)
 		le_exit("Failed to initialize \"md\" termcap\n", "tgetstr", errno);
 	if ((tc.me = tgetstr("me", NULL)) == NULL)
+		le_exit("Failed to initialize \"me\" termcap\n", "tgetstr", errno);
+	if ((tc.cr = tgetstr("cr", NULL)) == NULL)
+		le_exit("Failed to initialize \"me\" termcap\n", "tgetstr", errno);
+	if ((tc.cd = tgetstr("cd", NULL)) == NULL)
+		le_exit("Failed to initialize \"me\" termcap\n", "tgetstr", errno);
+	if ((tc.dl = tgetstr("dl", NULL)) == NULL)
+		le_exit("Failed to initialize \"me\" termcap\n", "tgetstr", errno);
+	if ((tc.al = tgetstr("al", NULL)) == NULL)
 		le_exit("Failed to initialize \"me\" termcap\n", "tgetstr", errno);
 
 	return (&tc);

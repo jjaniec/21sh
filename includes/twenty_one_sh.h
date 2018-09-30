@@ -6,7 +6,7 @@
 /*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 16:15:27 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/09/28 17:28:22 by cyfermie         ###   ########.fr       */
+/*   Updated: 2018/09/30 17:14:08 by cgaspart         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@
 # include "exec.h"
 # include "syntax_highlighting.h"
 # include "get_next_line.h"
+# include "autocomplete.h"
 
 # define HISTORY_FILE_PATH "$HOME/.42sh_history"
 

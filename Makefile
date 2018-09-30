@@ -44,6 +44,21 @@ SRC_NAME = 	is_separator.c \
 			line_edition/le_exit.c \
 			line_edition/get_le_debug_status.c \
 			line_edition/le_free_datas_and_history.c \
+			autocomplete/autocomplete.c \
+			autocomplete/str_effect.c \
+			autocomplete/autoc_dir.c \
+			autocomplete/dir_get_items.c \
+			autocomplete/autoc_menu.c \
+			autocomplete/order_tab_ascii.c \
+			autocomplete/autoc_mem_free.c \
+			autocomplete/autoc_key_reader.c \
+			autocomplete/autoc_fkey.c \
+			autocomplete/autoc_menu_print_items.c \
+			autocomplete/autoc_menu_print_spaces.c \
+			autocomplete/dir_get_items_search.c \
+			autocomplete/autoc_check_path.c \
+			autocomplete/autoc_push_in_line.c \
+			autocomplete/autoc_arrow.c \
 			line_edition/line_edition.c \
 			line_edition/process_key.c \
 			line_edition/actionk/action_key.c \
@@ -144,6 +159,7 @@ INCLUDES_NAME = lexer.h \
 				exec.h \
 				twenty_one_sh.h \
 				line_edition.h \
+				autocomplete.h \
 				syntax_highlighting.h \
 				log.h \
 				struct.h \
@@ -164,7 +180,7 @@ OBJ_DIR = ./objs/
 OBJ_SUBDIRS = lexer/ ast/ exec/ builtin/ line_edition/ line_edition/actionk/ \
 			line_edition/colosyn/ line_edition/init_le line_edition/boolean_check \
 			line_edition/print line_edition/signals line_edition/tools \
-			syntax_highlighting/ 
+			syntax_highlighting/ autocomplete/
 FT_PRINTF_DIR = ./ft_printf/
 LIBTAP_DIR = ./libtap/
 
