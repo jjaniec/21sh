@@ -6,7 +6,7 @@
 /*   By: sbrucker <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/21 19:38:32 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/26 11:42:33 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/10/01 14:43:10 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void		print_ast_tree(t_ast *node, int level)
 {
 	int			l;
 	int			sl;
-	const int	show_sub_ast = 1;
 	static int	sub_level = 0;
 
 	l = level;
@@ -70,7 +69,7 @@ void		print_ast_tree(t_ast *node, int level)
 		print_arg(node);
 	else
 		ft_printf("\e[1m%c\e[0m \e[2m%p - \e[0m\n", '~', node);
-	if (node->sub_ast && node->data && show_sub_ast)
+	if (node->sub_ast && node->data)
 		print_subast(node, &sub_level);
 	print_ast_tree(node->left, level + 1);
 }

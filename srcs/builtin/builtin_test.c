@@ -6,7 +6,7 @@
 /*   By: sbrucker <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/01 12:13:57 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/27 18:33:53 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/10/01 14:50:52 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,17 @@ t_option		g_tests_opts[] = {
 
 static int	right_format_builtin(char **argv, int *argc)
 {
-	if (ft_strequ(argv[0], "test"))
+	int		ac;
+
+	ac = 0;
+	while (argv[ac])
+		ac++;
+	if (ac > 0 && ft_strequ(argv[0], "test"))
 		return (1);
-	else if (ft_strequ(argv[0], "[") && ft_strequ(argv[*argc - 1], "]"))
+	else if (ft_strequ(argv[0], "[") && ft_strequ(argv[ac - 1], "]"))
 	{
-		argv[*argc - 1] = NULL;
+		free(argv[ac - 1]);
+		argv[ac - 1] = NULL;
 		(*argc)--;
 		return (1);
 	}
@@ -125,13 +131,12 @@ static int	parse_expr_comp(char **argv)
 	t_option	*opt_list;
 	t_option	*char_opt_index[CHAR_OPT_INDEX_SIZE];
 	int			ac;
-	char		**args;
 
 	ac = 0;
 	while (argv[ac])
 		ac++;
 	opt_list = g_tests_opts;
-	args = parse_options(&ac, argv + 1, opt_list, (t_option **)char_opt_index);
+	parse_options(&ac, argv + 1, opt_list, (t_option **)char_opt_index);
 	if (ft_strequ(argv[1], "=") && ft_strequ(argv[0], argv[2]))
 		return (0);
 	else if (ft_strequ(argv[1], "!=") && !ft_strequ(argv[0], argv[2]))

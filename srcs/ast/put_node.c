@@ -6,7 +6,7 @@
 /*   By: sebastien <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/25 16:36:10 by sebastien         #+#    #+#             */
-/*   Updated: 2018/09/26 11:27:36 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/10/01 11:46:09 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,7 @@ static int	is_bypass_token(t_ast *node)
 static int	manage_heredoc(t_lexeme *lex)
 {
 	if (lex->type_details == TK_DLESS)
-	{
-		log_debug("Hey heredoc here on lex->data %s", lex->data);
-		subp_heredoc(lex, lex->next->data);
 		return (1);
-	}
 	return (0);
 }
 
@@ -56,5 +52,7 @@ int			put_node(t_lexeme **lex, t_ast **root, t_ast *new, \
 			*lex = lex[0]->next;
 	else
 		*lex = lex[0]->next;
+	if (is_bypass_token(new))
+		free_node(&new);
 	return (flag_heredoc_eof);
 }

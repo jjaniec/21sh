@@ -6,7 +6,7 @@
 /*   By: sbrucker <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 12:39:26 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/29 18:46:59 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/10/01 14:44:52 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ int		lvl_node(t_ast *ast)
 	lvl = 5;
 	if (is_nodeop0(ast))
 		lvl = 0;
-	else if (lvl > 1 && is_nodeop1(ast))
+	else if (is_nodeop1(ast))
 		lvl = 1;
-	else if (lvl > 2 && is_nodeop1_5(ast))
+	else if (is_nodeop1_5(ast))
 		lvl = 2;
-	else if (lvl > 3 && is_nodeop2(ast))
+	else if (is_nodeop2(ast))
 		lvl = 3;
-	else if (lvl > 4 && is_nodeop3(ast))
+	else if (is_nodeop3(ast))
 		lvl = 4;
 	return (lvl);
 }

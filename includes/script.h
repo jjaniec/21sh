@@ -6,7 +6,7 @@
 /*   By: sebastien <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/24 21:01:05 by sebastien         #+#    #+#             */
-/*   Updated: 2018/09/25 17:31:08 by sebastien        ###   ########.fr       */
+/*   Updated: 2018/10/01 12:34:01 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@
 */
 
 void		script_lexemes(t_lexeme *lexemes);
-t_lexeme	*is_keyword(t_lexeme *lex);
+t_lexeme	*is_keyword(t_lexeme *lex, int last_lex_lvl);
+//t_lexeme	*is_keyword(t_lexeme *lex);
 
 
 /*

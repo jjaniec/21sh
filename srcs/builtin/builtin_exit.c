@@ -6,7 +6,7 @@
 /*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/25 17:21:10 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/29 15:59:45 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/10/01 14:48:55 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ inline void	builtin_exit(char **argv, char **envp, t_exec *exe)
 
 	(void)envp;
 	exit_val = 0;
-	first_arg_is_num = 0;
 	if (argv && argv[1])
 	{
 		if ((first_arg_is_num = str_is_num(argv[1])))

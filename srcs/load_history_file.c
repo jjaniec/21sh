@@ -44,5 +44,6 @@ void	load_history_file(struct s_line *le)
 		else if (ret == 0)
 			break ;
 		add_history(line, le);
+		free(line);
 	}
 }
