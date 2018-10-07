@@ -3,90 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_setenv.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbrucker <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/25 17:45:27 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/07/23 14:46:58 by sbrucker         ###   ########.fr       */
+/*   Created: 2018/09/27 19:34:40 by jjaniec           #+#    #+#             */
+/*   Updated: 2018/10/04 20:24:04 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <forty_two_sh.h>
 
-static char	**create_new_tab(const size_t size, char **envp)
-{
-	char	**new;
-	size_t	i;
-	size_t	j;
+/*
+** Check args format and return 1 to print error messages if any of them is invalid
+*/
 
-	new = (char **)ft_memalloc(sizeof(char *) * (size + 2));
-	if (!new)
-		exit(1);
-	i = 0;
-	j = 0;
-	while (i < size)
-	{
-		if (envp[i][0] != '=')
-		{
-			new[j] = ft_strdup(envp[i]);
-			if (!new[j])
-				exit(1);
-			j++;
-		}
-		i++;
-	}
-	return (new);
+static int	check_args(char **argv)
+{
+	while (argv && *argv)
+		if (!(ft_strchr(*argv++, '=')))
+			return (1);
+	return (0);
 }
 
-static char	*add_val(char *name, char *value)
-{
-	char	*line;
+/*
+** Print invalid parameters error message
+*/
 
-	if (name && value)
-		asprintf(&line, "%s=%s", name, value);
-	else if (name)
-		asprintf(&line, "%s=", name);
-	else
-		line = NULL;
-	return (line);
+static void	print_setenv_error(void)
+{
+	ft_putstr_fd(SH_NAME": setenv: usage VAR1=VALUE1 VAR2=VALUE2 ...\n", 2);
 }
 
-void		builtin_setenv(char **argv, char **envp, t_exec *exe)
-{
-	char	**new_envp;
+/*
+** Add environnement variables in our t_env_entry linked list w/ add_var
+*/
 
-	exe->ret = 0;
-	if (!argv[1])
-		show_envp(envp);
-	else if (argv[1] && argv[2] && !argv[3])
+void		builtin_setenv(char **argv, t_environ *env, t_exec *exe)
+{
+	char		**ptr;
+
+	(void)argv;
+	(void)env;
+	(void)exe;
+	ptr = argv + 1;
+	if (!(argv[1]))
 	{
-		if (get_env(argv[1], (const char **)envp))
-			new_envp = inline_unsetenv(argv[1], envp);
-		else
-			new_envp = create_new_tab(size_envp((const char **)envp), envp);
-		new_envp[size_envp((const char**)new_envp)] = add_val(argv[1], argv[2]);
-		if (exe->tmp_envp)
-		{
-			ft_free_argv(exe->tmp_envp);
-			exe->tmp_envp = NULL;
-		}
-		ft_free_argv(exe->envp);
-		exe->envp = new_envp;
+		builtin_env((char *[2]){"env", NULL}, env, exe);
+		return ;
 	}
-	else
+	if (check_args(ptr))
 	{
+		print_setenv_error();
 		exe->ret = 1;
-		ft_putstr_fd("setenv: Too few arguments.\n", 2);
+		return ;
 	}
-}
-
-char		**inline_setenv(char *name, char *value, char **envp)
-{
-	char	**new_envp;
-
-	if (get_env(name, (const char **)envp))
-		new_envp = inline_unsetenv(name, envp);
-	else
-		new_envp = create_new_tab(size_envp((const char **)envp), envp);
-	new_envp[size_envp((const char **)new_envp)] = add_val(name, value);
-	return (new_envp);
+	while (ptr && *ptr)
+	{
+		if (!(env->get_var(env, *ptr)))
+			env->add_var(env, *ptr, NULL);
+		else
+			ft_strncpy(env->last_used_elem->entry, *ptr, MAX_ENV_ENTRY_LEN);
+		ptr++;
+	}
+	exe->ret = 0;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   script.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sebastien <marvin@42.fr>                   +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/24 21:01:05 by sebastien         #+#    #+#             */
-/*   Updated: 2018/09/25 17:31:08 by sebastien        ###   ########.fr       */
+/*   Updated: 2018/10/01 11:59:52 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_lexeme	*is_keyword(t_lexeme *lex);
 */
 
 int			script_check_parsing(t_lexeme *lex1, t_lexeme *lex2);
-t_lexeme	*is_script_complete(t_lexeme *lex, t_lexeme *tmp, size_t next_token);
+t_lexeme	*is_script_complete(t_lexeme *lex, t_lexeme *tmp, int next_token);
 int			good_start(t_lexeme *lex);
 
 
@@ -64,9 +64,9 @@ int			put_node(t_lexeme **lex, t_ast **root, t_ast *new, \
 t_lexeme	*need_subast(t_lexeme *lex, t_ast **root, t_ast *new, \
 			void (* const node_placer)(t_ast *, t_ast *));
 
-t_lexeme	*find_end_lexeme(t_lexeme *start, const size_t end_token[]);
-t_lexeme	*find_lexeme_compete(t_lexeme *lex, const size_t end_token[]);
-t_lexeme	*find_end_lexeme_solo(t_lexeme *start, const size_t end_token);
+t_lexeme	*find_end_lexeme(t_lexeme *start, const int end_token[]);
+t_lexeme	*find_lexeme_compete(t_lexeme *lex, const int end_token[]);
+t_lexeme	*find_end_lexeme_solo(t_lexeme *start, const int end_token);
 
 
 /*

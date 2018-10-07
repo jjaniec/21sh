@@ -6,15 +6,13 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/28 21:10:22 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/09/29 22:01:47 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/10/01 20:24:57 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tests.h"
 
 # define MAX_BUF_SIZE	50000
-
-char	**g_envp;
 
 static void		test_syntax_hightlighting(char *test_name, char *test, \
 					char *expected_stdout)
@@ -23,17 +21,18 @@ static void		test_syntax_hightlighting(char *test_name, char *test, \
 	int			backup_stderr_fd;
 	t_lexeme	*lexemes = NULL;
 
-	redirect_both_fds(&backup_stdout_fd, &backup_stderr_fd);
+	redirect_both_fds(&backup_stdout_fd, &backup_stderr_fd, NULL, NULL);
 	lexer(test, &lexemes, NULL);
-	print_colorized_input(test, g_envp, lexemes, NULL);
+	print_colorized_input(test, lexemes, NULL);
 	free_lexemes(lexemes);
 	compare_fds_with_strings(test_name, expected_stdout, NULL, backup_stdout_fd, backup_stderr_fd);
+	remove(redirect_both_fds_STDOUT_FILENAME);
+	remove(redirect_both_fds_STDERR_FILENAME);
 }
 
-void			syntax_highlighting_tests(char **envp)
+void			syntax_highlighting_tests(t_environ *env)
 {
-	g_envp = envp;
-
+	(void)env;
 	test_syntax_hightlighting("Simple - progname found", "ls", COL_PROG_NAME_FOUND"ls"COL_DEFAULT);
 	test_syntax_hightlighting("Simple 2 - progname not found", "ls_", COL_PROG_NAME_NOT_FOUND"ls_"COL_DEFAULT);
 	test_syntax_hightlighting("Simple 3 - options", "ls -la", COL_PROG_NAME_FOUND"ls"COL_DEFAULT COL_PROG_OPT" -la"COL_DEFAULT);

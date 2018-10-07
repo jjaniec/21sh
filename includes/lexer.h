@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/12 15:14:05 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/09/29 18:45:59 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/10/02 14:01:04 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,13 +127,13 @@ int						is_separator(char c);
 
 int						is_operator(char c);
 
-t_lexeme				*create_lexeme(size_t type, char *data, \
-							size_t type_details, char **lexeme_begin_end_ptrs);
+t_lexeme				*create_lexeme(int type, char *data, \
+							int type_details, char **lexeme_begin_end_ptrs);
 
-size_t					get_lexeme_type(char *s, int *pos, \
-							char **data, size_t *type_details);
+int						get_lexeme_type(char *s, int *pos, \
+							char **data, int *type_details);
 
-size_t					lexeme_type_word(char *s, int *pos, char **data);
+int						lexeme_type_word(char *s, int *pos, char **data);
 
 void					handle_quotes_expansions(char **data);
 
@@ -145,9 +145,9 @@ int						handle_escape_offset(char *ptr, int in_quote_type);
 
 void					free_lexemes(t_lexeme *ll);
 
-void					handle_dollar_expansion(t_lexeme_clean_data *l, char **env);
+void					handle_dollar_expansion(t_lexeme_clean_data *l, t_shell_vars *vars);
 
-void					handle_tild_expansion(t_lexeme_clean_data *l, char **env);
+void					handle_tild_expansion(t_lexeme_clean_data *l, t_shell_vars *vars);
 
 char					*get_expansion_end(char *str);
 

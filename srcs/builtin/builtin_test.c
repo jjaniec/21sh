@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_test.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbrucker <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/01 12:13:57 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/27 18:33:53 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/10/01 18:56:14 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,14 +162,14 @@ static int	parse_expr_comp(char **argv)
 		return (1);
 }
 
-void		builtin_test(char **argv, char **envp, t_exec *exe)
+void		builtin_test(char **argv, t_environ *env, t_exec *exe)
 {
 	t_option	*opt_list;
 	t_option	*char_opt_index[CHAR_OPT_INDEX_SIZE];
 	int			ac;
 
 	(void)exe;
-	(void)envp;
+	(void)env;
 
 	ac = 0;
 	while (argv[ac])
@@ -199,9 +199,6 @@ void		builtin_test(char **argv, char **envp, t_exec *exe)
 		exit (parse_expr_file((argv + 1), opt_list, char_opt_index));
 	else if (argv[3] && !argv[4])
 		exit (parse_expr_comp(argv + 1));
-	else
-	{
-		format_help(BUILTIN_TEST_USAGE, opt_list);
-		exit (1);
-	}
+	format_help(BUILTIN_TEST_USAGE, opt_list);
+	exit (1);
 }

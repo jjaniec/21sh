@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_lexeme_compete.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbrucker <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:15:02 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/26 11:53:52 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/10/01 11:57:14 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 ** Find the end_lexeme for all end_token[]
 */
 
-static t_lexeme		**loop_find_tokens(const size_t end_token[], \
-					size_t size_end_token, t_lexeme *lex)
+static t_lexeme		**loop_find_tokens(const int end_token[], \
+					int size_end_token, t_lexeme *lex)
 {
 	unsigned int	i;
 	t_lexeme		**end;
@@ -38,8 +38,8 @@ static t_lexeme		**loop_find_tokens(const size_t end_token[], \
 ** Calculating the path length for all tokens.
 */
 
-static unsigned int	*loop_paths(const size_t end_token[], \
-					size_t size_end_token, t_lexeme *lex, t_lexeme **end)
+static unsigned int	*loop_paths(const int end_token[], \
+					int size_end_token, t_lexeme *lex, t_lexeme **end)
 {
 	unsigned int	i;
 	t_lexeme		*save;
@@ -67,7 +67,7 @@ static unsigned int	*loop_paths(const size_t end_token[], \
 ** Choose the closest path.
 */
 
-static unsigned int	loop_closest(const size_t end_token[], unsigned int *paths)
+static unsigned int	loop_closest(const int end_token[], unsigned int *paths)
 {
 	unsigned int	i;
 	unsigned int	closest;
@@ -89,9 +89,9 @@ static unsigned int	loop_closest(const size_t end_token[], unsigned int *paths)
 */
 
 t_lexeme			*find_lexeme_compete(t_lexeme *lex, \
-					const size_t end_token[])
+					const int end_token[])
 {
-	size_t			size_end_token;
+	int			size_end_token;
 	t_lexeme		**end;
 	unsigned int	*paths;
 	unsigned int	closest;

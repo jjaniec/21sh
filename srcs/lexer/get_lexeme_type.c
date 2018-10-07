@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/13 15:35:59 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/08/18 15:43:57 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/09/30 18:56:36 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 ** Makes a substring of our operator to store it in lexeme->data
 */
 
-static size_t	store_optlexeme(char *s, int data_len, \
-				int *pos, char **data, size_t type)
+static int	store_optlexeme(char *s, int data_len, \
+				int *pos, char **data, int type)
 {
 	*data = ft_strsub(s, 0, data_len);
 	*pos += data_len;
@@ -28,8 +28,8 @@ static size_t	store_optlexeme(char *s, int data_len, \
 ** Parse control operators (see lexer.h) and create a substring of it in *data
 */
 
-static size_t	lexeme_type_ctrlopt(char *s, int *pos, \
-					char **data, size_t *type_details)
+static int	lexeme_type_ctrlopt(char *s, int *pos, \
+					char **data, int *type_details)
 {
 	int		data_len;
 
@@ -65,8 +65,8 @@ static size_t	lexeme_type_ctrlopt(char *s, int *pos, \
 ** and create a substring of it in *data
 */
 
-static size_t	lexeme_type_rediropt(char *s, int *pos, \
-					char **data, size_t *type_details)
+static int	lexeme_type_rediropt(char *s, int *pos, \
+					char **data, int *type_details)
 {
 	int		data_len;
 
@@ -126,8 +126,8 @@ static size_t	lexeme_type_rediropt(char *s, int *pos, \
 ** remake data string and *pos offset
 */
 
-static size_t	is_redir_inputfd(char *s, int *pos, \
-					char **data, size_t *type_details)
+static int	is_redir_inputfd(char *s, int *pos, \
+					char **data, int *type_details)
 {
 	int		i;
 	int		start;
@@ -155,8 +155,8 @@ static size_t	is_redir_inputfd(char *s, int *pos, \
 ** of T_ENV_ASSIGN elements
 */
 
-size_t			get_lexeme_type(char *s, int *pos, \
-					char **data, size_t *type_details)
+int			get_lexeme_type(char *s, int *pos, \
+					char **data, int *type_details)
 {
 	if (!s)
 		return (0);

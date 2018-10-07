@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_options.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 21:45:34 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/09/26 16:58:09 by cyfermie         ###   ########.fr       */
+/*   Updated: 2018/10/03 16:19:01 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,14 @@ char			**parse_options(int *ac, char **av, \
 	if (char_opt_index && !(i = 0))
 		while (i != CHAR_OPT_INDEX_SIZE)
 			char_opt_index[i++] = NULL;
-	while ((*ac)-- > 1 && *ptr && **ptr == '-' && ft_strcmp(*ptr, "--"))
+	while ((!ac || (*ac)-- > 1) && *ptr && **ptr == '-' && ft_strcmp(*ptr, "--"))
 	{
 		if ((*ptr)[1] == '-')
 			toggle_str_opt(opt_list, (*ptr) + 1, char_opt_index);
 		else
 			toggle_char_opts(opt_list, (*ptr) + 1, char_opt_index);
-		ptr = (*ac != 0) ? (&ptr[1]) : (NULL);
+		ptr = ((!ac || *ac != 0)) ? (&ptr[1]) : (NULL);
 	}
+	//log_debug("End of options ptr %s", *ptr);
 	return (ptr);
 }

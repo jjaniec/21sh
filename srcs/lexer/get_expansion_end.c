@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_expansion_end.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/19 16:45:12 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/09/26 21:17:22 by cyfermie         ###   ########.fr       */
+/*   Updated: 2018/10/04 15:34:28 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ char		*get_expansion_end(char *str)
 {
 	char		*r;
 
+	if (!(str && *str))
+		return (str);
 	r = str + 1;
 	while (*r && !is_expansion_end_char(*r))
 		r++;

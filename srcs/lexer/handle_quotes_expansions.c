@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/21 15:18:07 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/09/25 18:43:03 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/10/04 15:39:40 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ static int		is_expansion_char(t_lexeme_clean_data *l, int in_quote_type, \
 
 	ptr = *(l->raw_lexeme_read_ptr);
 	*expansion_handler_ptr = NULL;
-	if (*ptr == '$')
+	if (*ptr == '$' && \
+		*(ptr + sizeof(char)) && \
+		!(is_separator(*(ptr + sizeof(char)))))
 		*expansion_handler_ptr = handle_dollar_expansion;
 	else if (*ptr == '~' && \
 		in_quote_type == NOT_IN_QUOTES && \
@@ -73,7 +75,7 @@ static int		is_expansion_char(t_lexeme_clean_data *l, int in_quote_type, \
 ** $new_data: ptr to new data string
 */
 
-static void		fill_new_data_str(t_lexeme_clean_data *l)
+static void		fill_new_data_str(t_lexeme_clean_data *l, t_shell_vars *vars)
 {
 	char	*ptr;
 	int		in_quote_type;
@@ -87,8 +89,8 @@ static void		fill_new_data_str(t_lexeme_clean_data *l)
 	while (ptr && *ptr)
 	{
 		if (is_expansion_char(l, in_quote_type, &expansion_handler))
-			(*(void (*)(t_lexeme_clean_data *, char **))(expansion_handler))\
-				(l, g_envp);
+			(*(void (*)(t_lexeme_clean_data *, t_shell_vars *))(expansion_handler))\
+				(l, vars);
 		else if (*ptr == '\\')
 		{
 			ptr += sizeof(char) * handle_escape_offset(ptr, NOT_IN_QUOTES);
@@ -102,8 +104,8 @@ static void		fill_new_data_str(t_lexeme_clean_data *l)
 			{
 				if (in_quote_type == IN_DQUOTES && is_expansion_char(l, in_quote_type, &expansion_handler))
 				{
-					(*(void (*)(t_lexeme_clean_data *, char **))(expansion_handler))\
-						(l, g_envp);
+					(*(void (*)(t_lexeme_clean_data *, t_shell_vars *))(expansion_handler))\
+						(l, vars);
 					continue ;
 				}
 				else if (*ptr == '\\')
@@ -135,7 +137,7 @@ void			handle_quotes_expansions(char **data)
 	new_lex_data.clean_data_size = ft_strlen(*data) * sizeof(char) + 1;
 	new_lex_data.clean_data = malloc(new_lex_data.clean_data_size);
 	new_lex_data.clean_data_write_ptr = new_lex_data.clean_data;
-	fill_new_data_str(&new_lex_data);
+	fill_new_data_str(&new_lex_data, get_shell_vars());
 	free(*data);
 	*data = new_lex_data.clean_data;
 	log_trace("Replaced old data w/ after quotes & expansions handling |%s|", *data);

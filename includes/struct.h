@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/25 10:31:07 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/29 18:45:44 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/10/02 14:01:47 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@
 
 typedef struct			s_lexeme
 {
-	size_t				type;
-	size_t				type_details;
+	int				type;
+	int				type_details;
 	void				*data;
 	char				*lexeme_begin_ptr;
 	char				*lexeme_end_ptr;
@@ -55,30 +55,14 @@ typedef struct			s_lexeme_clean_data
 
 typedef struct			s_ast
 {
-	size_t			type;
-	size_t			type_details;
+	int				type;
+	int				type_details;
 	char			**data;
 	struct s_ast	*sub_ast;
 	struct s_ast	*left;
 	struct s_ast	*right;
 	struct s_ast	*parent;
 }						t_ast;
-
-/*
-** int	ret: the return value of the last command. Default: 0
-** int	ready_for_exec: if set to one, next execve() will be bypassed Default: 0
-** char	**envp: the environmental var. Default: arg of the main()
-** char	**tmp_envp: environmental var if modified temporarily
-**			(T_ASSIGN_ENVIRONEMENT for instance). Default: NULL
-*/
-
-typedef struct			s_exec
-{
-	int		ret;
-	int		ready_for_exec;
-	char	**envp;
-	char	**tmp_envp;
-}						t_exec;
 
 /*
 ** Option typedef:
@@ -95,6 +79,82 @@ typedef struct			s_option
 	bool	opt_status;
 }						t_option;
 
-typedef t_option		*t_opt_list;
+/*
+** Each environnement entry will be stored in a struct with a
+** pointer to it's value
+** entry: Key/Value pair for environnement entry,
+**   like "OLDPWD=something"
+** val_begin_ptr: pointer to beginning of value in our key/value pair
+**   example, for "OLDPWD=something", val_begin_ptr will point to
+**   "something", it allows us not to look for the '=' char
+**   everytime we the value of
+**   the variable
+** ptr_to_pos_in_environ_tab: pointer to t_environ->environ entry position.
+**   for not having to search through all variables
+**   when we want to delete the entry
+*/
+
+typedef struct		s_env_entry
+{
+	char				entry[MAX_ENV_ENTRY_LEN + 1];
+	char				*val_begin_ptr;
+	char				**ptr_to_pos_in_environ_tab;
+	struct s_env_entry	*prev;
+	struct s_env_entry	*next;
+}					t_env_entry;
+
+/*
+** Environnement struct
+** environ: environnement to pass to programs
+** last_used_elem: last environnement entry requested / added / updated,
+**   set to NULL when calling (del_var) and en entry was deleted
+**   example use case in init_environ.c:update_info_env_vars()
+**   (mainly used for optimization)
+** last_entry_ptr: pointer to last element in our linked list,
+**   for way faster element adding
+**  env_entries_list: Linked list of env_entry strucs
+**  entry_count: Current number of elements in our linked list,
+**    also used for speeding up some things while adding/deleting
+**    elements
+**  add/upt/del/get_var: functions to use to control the linked list
+*/
+
+typedef struct		s_environ
+{
+	char			*environ[MAX_ENV_ENTRIES + 1];
+	t_env_entry		*last_used_elem;
+	t_env_entry		*last_entry_ptr;
+	t_env_entry		*env_entries_list;
+	int				entry_count;
+	char			*(*add_var)(struct s_environ *, char *, char *);
+	char			*(*upt_var)(struct s_environ *, char *, char *);
+	int				(*del_var)(struct s_environ *, char *);
+	t_env_entry		*(*get_var)(struct s_environ *, char *);
+}					t_environ;
+
+typedef t_environ	t_local_vars;
+
+typedef t_environ	t_internal_vars;
+
+typedef struct		s_shell_vars
+{
+	t_environ			*env;
+	t_local_vars		*locals;
+	t_internal_vars		*internals;
+}					t_shell_vars;
+
+/*
+** int	ret: the return value of the last command. Default: 0
+** int	ready_for_exec: if set to one, next execve() will be bypassed Default: 0
+** env: environnement
+*/
+
+typedef struct			s_exec
+{
+	int			ret;
+	int			ready_for_exec;
+	t_environ	*env;
+}						t_exec;
+
 
 #endif

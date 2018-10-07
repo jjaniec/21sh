@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_end_lexeme_solo.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbrucker <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 19:29:38 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/26 11:07:50 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/10/01 11:56:20 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 static t_lexeme	*to_end(t_lexeme *lex)
 {
-	size_t		end_token;
+	int			end_token;
 	t_lexeme	*save_lex;
 
 	if (lex->type_details == TK_SCRIPT_IF)
@@ -42,7 +42,7 @@ static t_lexeme	*to_end(t_lexeme *lex)
 ** Fin the next lexeme corresponding to *start with token next_token.
 */
 
-t_lexeme		*find_end_lexeme_solo(t_lexeme *start, const size_t end_token)
+t_lexeme		*find_end_lexeme_solo(t_lexeme *start, const int end_token)
 {
 	t_lexeme	*lex;
 

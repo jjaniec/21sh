@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/29 17:48:52 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/09/29 21:10:55 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/10/01 20:11:03 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void		compare_fds_with_strings(char *test_name, \
 			free(tmp_test_name);
 			close(fd);
 		}
-		remove(redirect_both_fds_STDOUT_FILENAME);
 	}
 
 	if (backup_stderr_fd)
@@ -58,6 +57,5 @@ void		compare_fds_with_strings(char *test_name, \
 			free(tmp_test_name);
 			close(fd);
 		}
-		remove(redirect_both_fds_STDERR_FILENAME);
 	}
 }

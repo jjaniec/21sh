@@ -6,13 +6,15 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/26 17:16:41 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/29 21:58:07 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/10/04 15:54:04 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tests.h"
 
-static char **env;
+#define TESTS_FILENAME "test"
+
+t_environ *g_env;
 
 static	void exec(char *input)
 {
@@ -20,13 +22,12 @@ static	void exec(char *input)
 	t_ast		*ast_root;
 	t_exec		*exe;
 
-	log_set_quiet(1);
 	lexer(input, &lex, NULL);
 	ast_root = ast(lex);
-	exe = create_exec((const char **)env);
+	exe = create_exec(g_env);
 	if (!ast_root)
 		return ;
-	exe = create_exec((const char **)env);
+	exe = create_exec(g_env);
 	exe = exec_cmd(ast_root, exe);
 	ast_free(ast_root);
 	free_lexemes(lex);
@@ -39,22 +40,26 @@ static void test_framework(char *str_test, char *expected_stdout, char *test_nam
 	int		backup_stderr_fd;
 	char	*tmp;
 
-	redirect_both_fds(&backup_stdout_fd, &backup_stderr_fd);
+	redirect_both_fds(&backup_stdout_fd, &backup_stderr_fd, NULL, NULL);
 	exec(ft_strjoin(str_test, " && echo 0 || echo 1\n"));
 	compare_fds_with_strings(test_name, (tmp = ft_strjoin(expected_stdout, "\n")), NULL, backup_stdout_fd, backup_stderr_fd);
+	remove(redirect_both_fds_STDOUT_FILENAME);
+	remove(redirect_both_fds_STDERR_FILENAME);
 	free(tmp);
 }
 
-void		builtin_test_tests(char **envp)
+void		builtin_test_tests(t_environ *env)
 {
-	env = envp;
+	g_env = env;
 	test_framework("[ -b /dev/disk0 ]", "0", "Block special file /dev/disk0");
 	test_framework("[ -b /dev/disk0s1 ]", "0", "Block special file /dev/disk0s1");
 	test_framework("[ -b /dev/null ]", "1", "Block special file /dev/null");
+	//test_framework("mknod "TESTS_FILENAME" c 89 1; [ -c /dev/null ]", "0", "Character special file /dev/null");
 	test_framework("[ -c /dev/null ]", "0", "Character special file /dev/null");
 	test_framework("[ -c /dev/zero ]", "0", "Character special file /dev/zero");
 	test_framework("[ -c notafile ]", "1", "Character special file notafile");
 	test_framework("[ -c . ]", "1", "Character special file .");
+	//system("rmnod "TESTS_FILENAME);
 	test_framework("[ -d . ]", "0", "Directory .");
 	test_framework("[ -d .. ]", "0", "Directory ..");
 	test_framework("[ -d notafile ]", "1", "Directory notafile");
@@ -87,7 +92,7 @@ void		builtin_test_tests(char **envp)
 	test_framework("[ -u b ]", "1", "User ID flag set b");
 	test_framework("[ -u notafile ]", "1", "User ID flag set notafile");
 	test_framework("[ -w . ]", "0", "Writeable file .");
-	test_framework("chmod 777 b; [ -w b ]", "0", "Writeable file b");
+	test_framework("touch b; chmod 777 b; [ -w b ]", "0", "Writeable file b");
 	test_framework("chmod 000 b; [ -w b ]", "1", "Writeable file b");
 	test_framework("chmod 777 b; [ -x b ]", "0", "Executable file b");
 	test_framework("chmod 000 b; [ -x b ]", "1", "Executable file b");

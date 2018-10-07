@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/29 17:32:36 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/09/29 17:32:54 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/10/01 12:22:04 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	test_lexeme_list(char *test_name, char *input, ...)
 	t_lexeme	*result;
 	t_lexeme	*ll_begin;
 	char		*data_cmp;
-	size_t		type_cmp;
-	size_t		type_details_cmp;
+	int		type_cmp;
+	int		type_details_cmp;
 	int			i;
 	char		*new_test_name;
 
@@ -37,8 +37,8 @@ void	test_lexeme_list(char *test_name, char *input, ...)
 		new_test_name = malloc(sizeof(char) * 100);
 		sprintf(new_test_name, "%s - Elem: %d - ", test_name, i);
 		data_cmp = va_arg(va_ptr, char *);
-		type_cmp = va_arg(va_ptr, size_t);
-		type_details_cmp = va_arg(va_ptr, size_t);
+		type_cmp = va_arg(va_ptr, int);
+		type_details_cmp = va_arg(va_ptr, int);
 		is(result->data, data_cmp, ft_strcat(new_test_name, "data"));
 		ft_strcpy(new_test_name + (ft_strlen(new_test_name) - 4), "type");
 		ok(result->type == type_cmp, new_test_name);

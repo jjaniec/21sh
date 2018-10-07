@@ -6,15 +6,16 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 16:19:06 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/09/29 21:35:16 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/10/04 15:41:49 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tests.h"
 
-void	lexer_tests(void)
+void	lexer_tests(t_environ *envp)
 {
 	t_lexeme	*tmp;
+	(void)tmp;
 
 	lexer("", &tmp, NULL);
 	ok(tmp == NULL, "Empty string");
@@ -123,9 +124,7 @@ void	lexer_tests(void)
 		"<<-", T_REDIR_OPT, TK_DLESSDASH);
 
 	// Add EXPANSION_TESTS_ENVVAR_NAME env var in env
-	char **tmp_new_env = inline_setenv(EXPANSION_TESTS_ENVVAR_NAME, EXPANSION_TESTS_ENVVAR_DATA, g_envp);
-	free(g_envp);
-	g_envp = tmp_new_env;
+	envp->add_var(envp, EXPANSION_TESTS_ENVVAR_NAME, EXPANSION_TESTS_ENVVAR_DATA);
 	//putenv(EXPANSION_TESTS_ENVVAR_NAME"="EXPANSION_TESTS_ENVVAR_DATA);
 
 	test_lexeme_list("Expansions 1 - Basic", "ls $"EXPANSION_TESTS_ENVVAR_NAME, \
@@ -167,7 +166,7 @@ void	lexer_tests(void)
 	test_lexeme_list("Expansions 19 - Empty expansion element escaping in dquotes", "ls \"\\$IAMEMPTY\"\n", \
 		"ls", T_WORD, TK_DEFAULT, "$IAMEMPTY", T_WORD, TK_DEFAULT, "\n", T_CTRL_OPT, TK_NEWLINE);
 	test_lexeme_list("Expansions 20 - tild expansion", "ls ~\n", \
-		"ls", T_WORD, TK_DEFAULT, getenv("HOME"), T_WORD, TK_DEFAULT, "\n", T_CTRL_OPT, TK_NEWLINE);
+		"ls", T_WORD, TK_DEFAULT, (envp->get_var(envp, "HOME"))->val_begin_ptr, T_WORD, TK_DEFAULT, "\n", T_CTRL_OPT, TK_NEWLINE);
 	test_lexeme_list("Expansions 21 - tild expansion escaped", "ls \\~\n", \
 		"ls", T_WORD, TK_DEFAULT, "~", T_WORD, TK_DEFAULT, "\n", T_CTRL_OPT, TK_NEWLINE);
 	test_lexeme_list("Expansions 22 - tild expansion in squotes", "ls '~'\n", \
@@ -178,10 +177,10 @@ void	lexer_tests(void)
 		"ls", T_WORD, TK_DEFAULT, "w~", T_WORD, TK_DEFAULT, "\n", T_CTRL_OPT, TK_NEWLINE);
 	char *tmp_;
 	test_lexeme_list("Expansions 25 - tild expansion w/ content after", "ls ~/Desktop\n", \
-		"ls", T_WORD, TK_DEFAULT, (tmp_ = ft_strjoin(getenv("HOME"), "/Desktop")), T_WORD, TK_DEFAULT, "\n", T_CTRL_OPT, TK_NEWLINE);
+		"ls", T_WORD, TK_DEFAULT, (tmp_ = ft_strjoin((envp->get_var(envp, "HOME"))->val_begin_ptr, "/Desktop")), T_WORD, TK_DEFAULT, "\n", T_CTRL_OPT, TK_NEWLINE);
 	free(tmp_);
 	test_lexeme_list("Expansions 26 - tild expansion as prog name", "~\n", \
-		getenv("HOME"), T_WORD, TK_DEFAULT, "\n", T_CTRL_OPT, TK_NEWLINE);
+		(envp->get_var(envp, "HOME"))->val_begin_ptr, T_WORD, TK_DEFAULT, "\n", T_CTRL_OPT, TK_NEWLINE);
 	test_lexeme_list("Expansions 27 - Long 1 - only valid expansions", \
 		"$"EXPANSION_TESTS_ENVVAR_NAME"$"EXPANSION_TESTS_ENVVAR_NAME"$"EXPANSION_TESTS_ENVVAR_NAME"$"EXPANSION_TESTS_ENVVAR_NAME\
 		"$"EXPANSION_TESTS_ENVVAR_NAME"$"EXPANSION_TESTS_ENVVAR_NAME"$"EXPANSION_TESTS_ENVVAR_NAME"$"EXPANSION_TESTS_ENVVAR_NAME\
@@ -234,7 +233,11 @@ void	lexer_tests(void)
 		""EXPANSION_TESTS_ENVVAR_DATA""EXPANSION_TESTS_ENVVAR_DATA""EXPANSION_TESTS_ENVVAR_DATA""EXPANSION_TESTS_ENVVAR_DATA\
 		""EXPANSION_TESTS_ENVVAR_DATA"EMPTY"EXPANSION_TESTS_ENVVAR_DATA"$"EXPANSION_TESTS_ENVVAR_NAME""EXPANSION_TESTS_ENVVAR_DATA\
 		""EXPANSION_TESTS_ENVVAR_DATA""EXPANSION_TESTS_ENVVAR_DATA, T_WORD, TK_DEFAULT, "\n", T_CTRL_OPT, TK_NEWLINE);
-	
+	test_lexeme_list("Expansions 31 - Particular cases 1 - empty expansion", "echo $",
+		"echo", T_WORD, TK_DEFAULT, "$", T_WORD, TK_DEFAULT);
+	test_lexeme_list("Expansions 32 - Particular cases 2 - empty expansion", "echo $; ls",
+		"echo", T_WORD, TK_DEFAULT, "$", T_WORD, TK_DEFAULT, ";", T_CTRL_OPT, TK_SEMICOLON, "ls", T_WORD, TK_DEFAULT);
+		
 	test_lexeme_list("Other - Fixed 1 - Empty elem break", "ls \"\"\n", \
 		"ls", T_WORD, TK_DEFAULT, "\n", T_CTRL_OPT, TK_NEWLINE);
 }

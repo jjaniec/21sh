@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   find_end_lexeme.c                                  :+:      :+:    :+:   */
+/*   get_shell_vars.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/08/30 19:11:24 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/10/01 11:57:01 by jjaniec          ###   ########.fr       */
+/*   Created: 2018/10/02 13:53:29 by jjaniec           #+#    #+#             */
+/*   Updated: 2018/10/03 18:17:41 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <forty_two_sh.h>
 
-/*
-** Return the sub_ast' closing' lexeme corresponding at t_lexeme *start
-*/
-
-t_lexeme	*find_end_lexeme(t_lexeme *start, const int end_token[])
+t_shell_vars	*get_shell_vars(void)
 {
-	if (!end_token[1])
-		return (find_end_lexeme_solo(start, end_token[0]));
-	else
-		return (find_lexeme_compete(start, end_token));
+	static t_shell_vars	vars;
+
+	return (&vars);
 }

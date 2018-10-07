@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/26 10:30:52 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/25 18:32:53 by sebastien        ###   ########.fr       */
+/*   Updated: 2018/10/01 11:26:37 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@
 ** Distribute the **argv to the rigth processing function
 */
 
-void	exec_argv(char **argv, char **envp, t_exec *exe, t_ast *node)
+void	exec_argv(char **argv, t_exec *exe, t_ast *node)
 {
 	if (ft_strchr(argv[0], '/'))
-		exec_local(argv, envp, exe, node);
-	else if (exec_builtin(argv, envp, exe, node))
+		exec_local(argv, exe->env, exe, node);
+	else if (exec_builtin(argv, exe->env, exe, node))
 		return ;
 	else
-		exec_binary(argv, envp, exe, node);
+		exec_binary(argv, exe->env, exe, node);
 }
 
 /*
@@ -42,8 +42,6 @@ t_exec	*pre_exec(t_ast *node, t_exec *exe)
 
 t_exec	*in_exec(t_ast *node, t_exec *exe)
 {
-	char	**envp;
-
 	if (!node->data)
 		return (exe);
 	log_debug("Current node IN : %s ready for exec %d", node->data[0], exe->ready_for_exec);
@@ -54,14 +52,13 @@ t_exec	*in_exec(t_ast *node, t_exec *exe)
 		io_manager_in(node, exe);
 		log_debug("Current node IN : %s ready for exec %d", node->data[0], exe->ready_for_exec);
 	}
-	if (((node->type == T_WORD && node->type_details == TK_DEFAULT) || node->type_details == TK_SCRIPT_CONDITION_IF || node->type_details == TK_SCRIPT_CONDITION_WHILE) && !exe->ready_for_exec)
+	if (((node->type == T_WORD && node->type_details == TK_DEFAULT) || \
+		node->type_details == TK_SCRIPT_CONDITION_IF || \
+		node->type_details == TK_SCRIPT_CONDITION_WHILE) && \
+		!exe->ready_for_exec)
 	{
-		if (exe->tmp_envp)
-			envp = exe->tmp_envp;
-		else
-			envp = exe->envp;
 		if (!(node->parent->type == T_REDIR_OPT && node == node->parent->right))
-			exec_argv(node->data, envp, exe, node);
+			exec_argv(node->data, exe, node);
 	}
 	return (exe);
 }

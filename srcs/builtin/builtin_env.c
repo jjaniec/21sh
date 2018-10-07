@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/25 17:44:55 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/09/15 15:25:41 by jjaniec          ###   ########.fr       */
+/*   Created: 2018/09/27 19:40:20 by jjaniec           #+#    #+#             */
+/*   Updated: 2018/10/05 18:02:40 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,65 +24,81 @@ t_option		g_env_opts[] = {
 	{{NULL}, NULL, false}
 };
 
-static char	**create_new_var(char *str, char **envp)
+static int		print_env_content(char **environ)
 {
-	char	*equal;
-	char	**new_envp;
-	char	**tmp_envp;
-
-	equal = ft_strchr(str, '=');
-	if (!equal)
-	{
-		ft_strdel(&str);
-		return (cp_envp((const char **)envp));
-	}
-	else
-	{
-		*equal = '\0';
-		tmp_envp = cp_envp((const char **)envp);
-		if (!tmp_envp)
-			exit(MALLOC_ERROR);
-		new_envp = inline_setenv(str, equal + 1, tmp_envp);
-		ft_free_argv(tmp_envp);
-		ft_strdel(&str);
-		return (new_envp);
-	}
+	while (environ && *environ)
+		ft_putendl(*environ++);
+	return (0);
 }
 
-static void	free_envp(t_exec *exe, char **sve_envp, char **nw_envp)
+static char	*handle_parameters(char **argv, t_environ *env_struct, \
+				t_environ **env_struct_to_use, char ***tmp_environ_start)
 {
-	ft_free_argv(exe->envp);
-	if (exe->tmp_envp)
+	int				starting_entry_count;
+
+	argv = parse_options(NULL, argv, g_env_opts, NULL);
+	if (is_option_activated("i", g_env_opts, NULL))
 	{
-		ft_free_argv(exe->tmp_envp);
-		exe->tmp_envp = NULL;
+		(*env_struct_to_use) = malloc(sizeof(t_environ));
+		init_environ_struct_ptrs((*env_struct_to_use));
 	}
-	ft_free_argv(nw_envp);
-	exe->envp = sve_envp;
-}
-
-void		builtin_env(char **argv, char **envp, t_exec *exe)
-{
-	char	**new_envp;
-	char	**save_envp;
-
-	exe->ret = 0;
-	if (!argv[1])
-		show_envp(envp);
 	else
+		(*env_struct_to_use) = env_struct;
+	*tmp_environ_start = \
+		&((*env_struct_to_use)->environ[(*env_struct_to_use)->entry_count]);
+	starting_entry_count = (*env_struct_to_use)->entry_count;
+	while (argv && *argv && ft_strchr(*argv, '='))
 	{
-		save_envp = cp_envp((const char **)envp);
-		new_envp = create_new_var(ft_strdup(argv[1]), envp);
-		if (ft_strchr(argv[1], '='))
+		if (!((*env_struct_to_use)->entry_count < MAX_ENV_ENTRIES))
+			break ;
+		if ((*env_struct_to_use)->get_var((*env_struct_to_use), *argv))
 		{
-			if (!argv[2])
-				show_envp(new_envp);
-			else
-				exec_argv(argv + 2, new_envp, exe, NULL);
+			ft_strncpy((*env_struct_to_use)->last_used_elem->entry, *argv, MAX_ENV_ENTRY_LEN);
+			(*env_struct_to_use)->entry_count += 1;
 		}
 		else
-			exec_argv(argv + 1, new_envp, exe, NULL);
-		free_envp(exe, save_envp, new_envp);
+			(*env_struct_to_use)->add_var((*env_struct_to_use), *argv, NULL);
+		argv += 1;
 	}
-	exit(0);
+	(*env_struct_to_use)->environ[(*env_struct_to_use)->entry_count] = NULL;
+	return *argv;
+}
+
+
+
+int			builtin_env_(char **argv, t_environ *env)
+{
+	t_environ		*env_struct_to_use;
+	char			*command_begin_ptr;
+	char			**tmp_environ_start;
+
+	if (env)
+	{
+		if (!((command_begin_ptr = handle_parameters(argv, env, &env_struct_to_use, &tmp_environ_start))))
+			print_env_content(env_struct_to_use->environ);
+		//else
+		//	exec_command_passed_in_last_parameters(command_begin_ptr);
+		if (env_struct_to_use != env)
+			free(env_struct_to_use);
+		else
+			while (*tmp_environ_start)
+				*tmp_environ_start++ = NULL;
+		return (0);
+	}
+	return (1);
+}
+
+void			builtin_env(char **argv, t_environ *env, t_exec *exe)
+{
+	(void)argv;
+	(void)exe;
+
+	if (argv[1])
+		builtin_env_(argv, env);
+	else
+		print_env_content(env->environ);
+	if (exe)
+		exe->ret = 0;
+	//exe->ret = (argv[1] && builtin_env_(argv, env)) ??!??! print_env_content(env->environ);
+	//exe->ret = builtin_env_(argv, env);
 }

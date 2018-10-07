@@ -3,92 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unsetenv.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbrucker <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/25 17:45:41 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/07/23 14:28:36 by sbrucker         ###   ########.fr       */
+/*   Created: 2018/09/27 19:36:08 by jjaniec           #+#    #+#             */
+/*   Updated: 2018/10/01 15:49:07 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <forty_two_sh.h>
 
-static char	**create_new_tab(const size_t size, const char **envp)
+void		builtin_unsetenv(char **argv, t_environ *env, t_exec *exe)
 {
-	char	**new;
-	size_t	i;
-	size_t	j;
-	size_t	actual_size;
-
-	actual_size = size_envp((const char **)envp);
-	new = (char **)ft_memalloc(sizeof(char *) * (size + 2));
-	if (!new)
-		exit(1);
-	i = 0;
-	j = 0;
-	while (i < actual_size)
+	(void)argv;
+	(void)exe;
+	if (env && argv && *argv)
 	{
-		if (envp[i][0] != '=')
-		{
-			new[j] = ft_strdup(envp[i]);
-			if (!new[j])
-				exit(1);
-			j++;
-		}
-		i++;
+		argv++;
+		while (*argv)
+			env->del_var(env, *argv++);
 	}
-	return (new);
-}
-
-static int	unset(char **envp, char *name)
-{
-	int		pos;
-
-	pos = get_env_pos(name, (const char **)envp);
-	if (pos != -1)
-	{
-		envp[pos][0] = '=';
-		return (1);
-	}
-	return (0);
-}
-
-void		builtin_unsetenv(char **argv, char **envp, t_exec *exe)
-{
-	size_t	i;
-	size_t	removed;
-	char	**new_envp;
-
-	exe->ret = 0;
-	if (!argv[1])
-	{
-		exe->ret = 1;
-		ft_putstr_fd("unsetenv: Too few arguments.\n", 2);
-	}
-	else
-	{
-		i = 1;
-		removed = size_envp((const char **)envp);
-		while (argv[i])
-		{
-			removed -= unset(envp, argv[i]);
-			i++;
-		}
-		new_envp = create_new_tab(removed, (const char **)envp);
-		if (exe->tmp_envp)
-		{
-			ft_free_argv(exe->tmp_envp);
-			exe->tmp_envp = NULL;
-		}
-		ft_free_argv(exe->envp);
-		exe->envp = new_envp;
-	}
-}
-
-char		**inline_unsetenv(char *name, char **envp)
-{
-	char	**new_envp;
-
-	unset(envp, name);
-	new_envp = create_new_tab(size_envp((const char **)envp) - 1, (const char **)envp);
-	return (new_envp);
+	//return (0);
 }

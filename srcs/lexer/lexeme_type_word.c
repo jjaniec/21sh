@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/14 14:44:31 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/09/25 14:51:34 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/09/30 18:57:03 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static int	is_clean_needed(char **data)
 ** to skip $IFS separators until corresponding quote
 */
 
-size_t		lexeme_type_word(char *s, int *pos, char **data)
+int			lexeme_type_word(char *s, int *pos, char **data)
 {
 	int		start;
 

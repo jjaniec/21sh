@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   script_lexer.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sebastien <marvin@42.fr>                   +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/24 21:07:42 by sebastien         #+#    #+#             */
-/*   Updated: 2018/09/26 11:20:40 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/10/01 11:57:57 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 ** change it to a TK_SCRIPT_FI (for a parsing error every time)
 */
 
-static t_lexeme	*next_lex_condition(t_lexeme *lex, size_t token)
+static t_lexeme	*next_lex_condition(t_lexeme *lex, int token)
 {
 	if (lex->next)
 		lex->next = is_keyword(lex->next);
@@ -40,7 +40,7 @@ static t_lexeme	*next_lex_condition(t_lexeme *lex, size_t token)
 */
 
 static t_lexeme	*associate_token(t_lexeme *lex, const char *original, \
-				size_t type, size_t type_details)
+				int type, int type_details)
 {
 	char	*word;
 

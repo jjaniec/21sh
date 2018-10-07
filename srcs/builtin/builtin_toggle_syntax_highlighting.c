@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_toggle_syntax_highlighting.c               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/05 18:30:18 by cyfermie          #+#    #+#             */
-/*   Updated: 2018/09/26 20:30:26 by cyfermie         ###   ########.fr       */
+/*   Updated: 2018/10/01 11:22:59 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,11 @@ static int			check_args(char **args)
 	return (0);
 }
 
-/*
-**	syntax [on \ off]
-**	(de)active syntax highlighting.
-*/
-
-void				builtin_toggle_syntax_highlighting(char **argv, char **envp,
+void				builtin_toggle_syntax_highlighting(char **argv, t_environ *env,
 																	t_exec *exe)
 {
-	(void)envp;
+	(void)env;
+	(void)exe;
 	if (check_args(argv + 1) == -1)
 	{
 		exe->ret = 1;
