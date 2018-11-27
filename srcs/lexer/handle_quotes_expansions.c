@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/21 15:18:07 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/11/08 19:56:29 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/11/19 20:17:56 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,14 @@ static void		fill_new_data_str(t_lexeme_clean_data *l, t_shell_vars *vars)
 	in_quote_type = NOT_IN_QUOTES;
 	while (ptr && *ptr)
 	{
+		//dprintf(1, "ptr = `%s`\n", ptr);
 		if (is_expansion_char(l, in_quote_type, &expansion_handler))
 			(*(void (*)(t_lexeme_clean_data *, t_shell_vars *))(expansion_handler))\
 				(l, vars);
 		else if (*ptr == '\\')
 		{
-			ptr += sizeof(char) * handle_escape_offset(ptr, NOT_IN_QUOTES);
-			(*(l->clean_data_write_ptr++)) = *(ptr++);
+			if (*(ptr += sizeof(char) * handle_escape_offset(ptr, NOT_IN_QUOTES)))
+				(*(l->clean_data_write_ptr++)) = *(ptr++);
 		}
 		else if ((*ptr == '\'' || *ptr == '"') && \
 			is_quote_removable(ptr, &jump_ptr, &in_quote_type))

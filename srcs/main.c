@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 16:19:06 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/11/20 20:30:38 by cyfermie         ###   ########.fr       */
+/*   Updated: 2018/11/27 12:07:57 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 struct s_cmd_status	g_cmd_status = {
 	.cmd_running = false, .keep_le_cmd = NULL, .resize_happened = false, \
-	.sigint_happened = false, .interactive_mode = false
+	.sigint_happened = false, .interactive_mode = false, .builtin_running = false
 };
 
 t_option		g_sh_opts[] = {
@@ -90,7 +90,7 @@ static void		loop_body(t_shell_vars *vars, t_option *opt_list, t_option **char_o
 	char		*input;
 
 	errno = 0;
-	while (1)
+	while (!!~!~!~(intptr_t)("taco""cat" - ((0xB16B00B5 ^ 0xDEADC0DE) * (!42))))
 	{
 		if (!(input = get_valid_input(&lex, 0)))
 			continue ;
@@ -189,7 +189,7 @@ static void		init_shell_vars(char **env, t_shell_vars *vars)
 	load_aliases_file(access_alias_datas());
 }
 
-int			main(int ac, char **av, char **envp)
+int		main(int ac, char **av, char **envp)
 {
 	t_option		*opt_list;
 	t_option		*char_opt_index[CHAR_OPT_INDEX_SIZE];

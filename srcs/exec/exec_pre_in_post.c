@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/26 10:30:52 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/11/17 16:27:26 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/11/27 12:08:44 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,13 @@ static void	exec_node(char **argv, t_exec *exe, t_ast *node)
 		argv++;
 	}
 	if (is_builtin(argv[0], &builtin_fun_ptr))
-		exec_thread(\
-			(void *[3]){(void *)EXEC_THREAD_BUILTIN, &builtin_fun_ptr, argv}, \
-			NULL, exe, node);
+		fork_and_exec(\
+			(void *[3]){(void *)PROG_BUILTIN, &builtin_fun_ptr, argv}, \
+			exe, node);
 	else
-		exec_thread((void *[3]){EXEC_THREAD_NOT_BUILTIN, argv[0], argv}, \
-			NULL, exe, node);
+		fork_and_exec(\
+			(void *[3]){PROG_NOT_BUILTIN, argv[0], argv}, \
+			exe, node);
 	if (not)
 		exe->ret = (exe->ret == 0) ? 1 : 0;
 }

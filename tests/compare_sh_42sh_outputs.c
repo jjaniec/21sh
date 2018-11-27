@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/29 17:36:33 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/10/03 18:30:07 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/11/17 16:55:09 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,10 @@ void	compare_sh_42sh_outputs(char *test_name, char *_42sh_cmd, char *sh_cmd)
 
 	if (!(*MODE == 'L' && ft_strstr(_42sh_cmd, "<<<")))
 	{
-		test_name_str_len = ft_strlen(test_name);
-		new_test_name = malloc(test_name_str_len * sizeof(char) + 10);
-		ft_strcpy(new_test_name, test_name);
-
 		redirect_both_fds(&backup_stdout_fd, &backup_stderr_fd, _42SH_DATA_FILE_STDOUT, _42SH_DATA_FILE_STDERR);
 		asprintf(&cmd_sh, SH_EXEC_CMD_PREFIX"\"%s\"", _42sh_cmd);
 		system(cmd_sh);
+		free(cmd_sh);
 		dup2(backup_stdout_fd, fileno(stdout));
 		close(backup_stdout_fd);
 		dup2(backup_stderr_fd, fileno(stderr));
@@ -45,11 +42,15 @@ void	compare_sh_42sh_outputs(char *test_name, char *_42sh_cmd, char *sh_cmd)
 		redirect_both_fds(&backup_stdout_fd, &backup_stderr_fd, SH_DATA_FILE_STDOUT, SH_DATA_FILE_STDERR);
 		asprintf(&cmd_sh, "sh -c \"%s\"", ((sh_cmd) ? (sh_cmd) : (_42sh_cmd)));
 		system(cmd_sh);
+		free(cmd_sh);
 		dup2(backup_stdout_fd, fileno(stdout));
 		close(backup_stdout_fd);
 		dup2(backup_stderr_fd, fileno(stderr));
 		close(backup_stderr_fd);
 
+		test_name_str_len = ft_strlen(test_name);
+		new_test_name = malloc(test_name_str_len * sizeof(char) + 10);
+		ft_strcpy(new_test_name, test_name);
 		ret = system("diff "_42SH_DATA_FILE_STDOUT" "SH_DATA_FILE_STDOUT);
 		ft_strcpy(new_test_name + test_name_str_len, " - stdout");
 		ok(!ret, test_name);
@@ -57,6 +58,8 @@ void	compare_sh_42sh_outputs(char *test_name, char *_42sh_cmd, char *sh_cmd)
 		ft_strcpy(new_test_name + test_name_str_len, " - stderr");
 		ok(!ret, test_name);
 		free(new_test_name);
+
+	//system("echo '42sh stdout:'; cat "_42SH_DATA_FILE_STDOUT"; echo '42sh stderr:'; cat "_42SH_DATA_FILE_STDERR"; echo 'sh stdout:';  cat "SH_DATA_FILE_STDOUT"; echo 'sh stderr:'; cat "SH_DATA_FILE_STDERR);
 
 		remove(_42SH_DATA_FILE_STDOUT);
 		remove(_42SH_DATA_FILE_STDERR);

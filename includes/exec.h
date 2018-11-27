@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 13:04:09 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/11/11 16:45:46 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/11/19 17:40:14 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,37 +31,67 @@
 # define DEFAULT_OUTPUT_REDIR_FILE_MODE 0644
 
 /*
+** Char signaling filedesc redir close
+*/
+
+# define CLOSE_FD_REDIR_SYMBOL '-'
+
+/*
+** Validity checks for redirections,
+** those defines are used only in check_redir_suffix_validity.c
+*/
+
+# define MODE_CHECK_REDIR_VALID_FILE	1
+# define MODE_CHECK_REDIR_VALID_FD		2
+# define REDIRS_AMBIGUOUS_CHARS	""
+
+/*
 ** Default count of filedesc supported for redirects like 4>&-
 */
 
 # define DEFAULT_SUPPORTED_FDS_COUNT 3
 
 /*
-** Define to indicate to exec_thread() that passed command is a builtin
+** Define to indicate to fork_and_exec() that passed command is a builtin
 ** and should be executed with a function pointer instead of execve()
 */
 
-# define EXEC_THREAD_NOT_BUILTIN	0
-# define EXEC_THREAD_BUILTIN		1
+# define PROG_NOT_BUILTIN	0
+# define PROG_BUILTIN		1
 # define STATEMENT_BREAK			-1
 # define STATEMENT_CONTINUE			-2
 # define STATEMENT_NOCMD			-3
+
+/*
+** Specify attributes passed to open for each output redirection token
+*/
+
+# define REDIRS_OPEN_BASE_ATTR	O_WRONLY | O_CREAT
+
+# define TK_GREAT_OPEN_ATTR		REDIRS_OPEN_BASE_ATTR | O_TRUNC
+# define TK_DGREAT_OPEN_ATTR 	REDIRS_OPEN_BASE_ATTR | O_APPEND
+# define TK_LESSGREAT_OPEN_ATTR	REDIRS_OPEN_BASE_ATTR | O_RDONLY
+
+/*
+** Modes used by beckup_apply_origin_fds() in child_process.c
+*/
+
+# define MODE_BACKUP_ORIGIN_FDS		1
+# define MODE_RESTORE_ORIGIN_FDS	2
 
 void		clean_data(char **data);
 
 // Binary finding & execution
 
 t_exec	*exec_cmd(t_ast *root, t_exec *exe);
-t_exec	*exec_thread(void **cmd, t_environ *env_struct, t_exec *exe, t_ast *node);
+t_exec	*fork_and_exec(void **cmd, t_exec *exe, t_ast *node);
+void	child_process(void **cmd, t_exec *exe, \
+				t_ast *node, int **pipe_fds);
 t_exec	*pre_exec(t_ast *node, t_exec *exe);
 t_exec	*in_exec(t_ast *node, t_exec *exe);
 t_exec	*post_exec(t_ast *node, t_exec *exe);
 int		resolve_cmd_path(void **cmd, t_exec *exe);
-int		is_builtin(char *cmd, \
-			void (**builtin_fun_ptr)(char **, t_environ *, t_exec *));
 int		get_process_return_code(int *status, pid_t waited_pid, pid_t expected_waited_pid);
-
-//
 
 void	io_manager_in(t_ast *node, t_exec *exe);
 void	io_manager_pre(t_ast *node, t_exec *exe);
@@ -73,23 +103,6 @@ t_exec	*create_exec(t_environ *env);
 
 char	*isin_path(char *path_entry, char *cmd);
 
-// Builtins
-
-void	builtin_exit(char **argv, t_environ *env, t_exec *exe);
-void	builtin_echo(char **argv, t_environ *env, t_exec *exe);
-void	builtin_env(char **argv, t_environ *env, t_exec *exe);
-void	builtin_setenv(char **argv, t_environ *env, t_exec *exe);
-void	builtin_unsetenv(char **argv, t_environ *env, t_exec *exe);
-void	builtin_cd(char **argv, t_environ *env, t_exec *exe);
-void	builtin_return(char **argv, t_environ *env, t_exec *exe);
-void	builtin_toggle_syntax_highlighting(char **argv, t_environ *env, \
-			t_exec *exe);
-void	builtin_test(char **argv, t_environ *env, t_exec *exe);
-void	builtin_history(char **argv, t_environ *env, t_exec *exe);
-void	builtin_toggle_syntax_highlighting(char **argv, t_environ *env,
-			t_exec *exe);
-void	builtin_alias(char **argv, t_environ *env, t_exec *exe);
-void	builtin_unalias(char **argv, t_environ *env, t_exec *exe);
 
 char	*get_env(const char *name, const char **envp);
 int		get_env_pos(const char *name, const char **envp);
@@ -100,8 +113,9 @@ int		parse_expr_comp(char **argv);
 
 // Redirects
 
-void	handle_redirs(t_ast *redir_ast_node);
+int		handle_redirs(t_ast *redir_ast_node);
 void	handle_redir_fd(int input_fd, int target_fd);
+int		check_redir_suffix_validity(t_ast *redir_ast_node);
 
 // Pipes
 
@@ -110,10 +124,9 @@ void	init_pipe_data(char ***node_data, t_ast *pipe_node_ptr);
 t_ast	*get_last_pipe_node(t_ast *node);
 int		**get_pipe_fds(t_ast *last_pipe_node, t_ast *node);
 
-
 // Error Handling
 
-void			handle_open_error(int errno_code, char *filename);
+int				handle_open_error(int errno_code, char *filename);
 void			print_error(char *subject, char *err_str);
 
 t_job		*create_job(char *command);

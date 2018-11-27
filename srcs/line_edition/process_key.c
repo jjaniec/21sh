@@ -6,7 +6,7 @@
 /*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/25 16:28:40 by cyfermie          #+#    #+#             */
-/*   Updated: 2018/09/30 18:14:35 by cyfermie         ###   ########.fr       */
+/*   Updated: 2018/10/22 16:00:38 by cyfermie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void			process_key(struct s_line *le)
 				insert_and_print_character_into_cmdline(le, le->key_no);
 		}
 	}
-	else if (le->key_no == '\n')
+	else if (le->key_no == le->le_state.le_char_delim)
 	{
 		check_cmd_storage(le, 1);
 		le->cmd[le->cmd_len] = le->key_no;

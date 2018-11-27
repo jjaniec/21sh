@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aliases_replace.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbrucker <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/27 13:00:45 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/11/11 17:08:18 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/11/21 12:52:16 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static t_lexeme		*need_replace(t_lexeme *lex, const struct s_alias *alias)
 	first_word = 0;
 	while (lex)
 	{
-		while (first_word && lex && lex->type == T_WORD)
+		while (first_word && lex && lex->next && lex->type == T_WORD)
 		{
 			last = lex;
 			lex = lex->next;

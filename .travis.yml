@@ -111,8 +111,8 @@ matrix:
         #   env: CXX=clang-5.0
 script: >
   if [ $TRAVIS_OS_NAME == linux ];
-  then ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make CC=$CXX tests;
-  else ./build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir bw-output make CC=$CXX tests;
+  then ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make CC=$CXX ADDITIONAL_FLAGS="-DCI_TEST=1" tests;
+  else ./build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir bw-output make CC=$CXX ADDITIONAL_FLAGS="-DCI_TEST=1" tests;
   fi;
   if [ $TRAVIS_OS_NAME == osx ];
   then ./42sh_tests;

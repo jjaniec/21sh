@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/11 16:15:27 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/11/11 21:10:42 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/11/21 12:52:19 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@
 # include "signals.h"
 # include "script.h"
 # include "autocomplete.h"
+# include "builtins.h"
 # include "hash_table.h"
 # include "prompt_details.h"
 
@@ -80,6 +81,10 @@
 # define ERR_NORIGHTS		"permission denied: "
 # define ERR_CMD_NOT_FOUND	"command not found\n"
 # define ERR_INVALID_ALIAS_NAME "alias: invalid alias name\n"
+# define ERR_AMBIGUOUS_REDIR	"ambiguous redirect\n"
+# define ERR_BAD_FILEDESC		"Bad file descriptor\n"
+# define ERR_ENOTDIR			"not a directory\n"
+# define ERR_EACCESS			"permission denied\n"
 
 extern t_option		g_sh_opts[];
 extern const int	g_cant_begin_with[];
@@ -98,26 +103,7 @@ extern t_job		*g_jobs;
 # define NOT_A_TTY_STDINOUT_ERR \
 	SH_NAME": Input/output redirections are not supported, exiting\n"
 
-# define BUILTIN_ENV_USAGE \
-	"env [-i][name=value]...	[utility [argument...]]"
-
-# define BUILTIN_CD_USAGE \
-	"cd [-L | -P] [-] [directory]"
-
-# define BUILTIN_TEST_USAGE \
-	"test, [ --\n\t\ttest expression\n\t\t[ expression ]\n\t\t! expression"
-
-# define BUILTIN_HISTORY_USAGE \
-	"Usage : history [n | -d n | --clear | --save]\n"
-
-# define BUILTIN_ALIAS_USAGE \
-	"usage: alias [-d] key value | --save\n"
-
-# define BUILTIN_SETENV_USAGE \
-	SH_NAME": setenv: usage setenv VAR1=VALUE1 VAR2=VALUE2 ...\n"
-
-# define BUILTIN_UNSETENV_USAGE \
-	SH_NAME": unsetenv: usage unsetenv VAR1NAME VAR2NAME ...\n"
+typedef int	t_acocat;
 
 int			get_next_line(const int fd, char **line);
 

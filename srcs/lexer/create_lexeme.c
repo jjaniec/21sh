@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/13 18:48:09 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/11/10 15:10:53 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/11/14 18:39:42 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,8 @@ t_lexeme		*create_lexeme(int type[2], char *data, \
 		e->lexeme_end_ptr = lexeme_begin_end_ptrs[1];
 		e->pos = pos;
 		e->next = NULL;
-		log_info("Created elem w/ data |%s| - type : %d - begin |%5s| - end |%5s|", data, type[0], e->lexeme_begin_ptr, e->lexeme_end_ptr);
-		if (e->type == T_CTRL_OPT /*&& \
-			(e->type_details == TK_DAND || e->type_details == TK_SEMICOLON || \
-			e->type_details == TK_OR || e->type_details == TK_PIPE)*/)
+		log_info("Created elem w/ data |%s| - type: %d - type_details: %d - begin |%5s| - end |%5s|", data, e->type, e->type_details, e->lexeme_begin_ptr, e->lexeme_end_ptr);
+		if (e->type == T_CTRL_OPT)
 			env_assigns_status(*"Reset env_assign_status variable", 0);
 	}
 	else

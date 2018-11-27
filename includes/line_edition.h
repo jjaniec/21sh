@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   line_edition.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/22 15:45:45 by cyfermie          #+#    #+#             */
-/*   Updated: 2018/11/08 19:45:55 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/11/09 17:13:34 by cyfermie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int		get_le_debug_status(int mode, int new_value);
 /*
 **	Things
 */
+# define LE_CHAR_DELIM_DEFAULT (t_kno)'\n'
 # define RESIZE_IN_PROGRESS ((char *)(-1))
 # define LE_DEFAULT_PROMPT (0)
 # define LE_IFS (char []){'\t', '\n', ' ', '\0'}
@@ -130,9 +131,10 @@ typedef enum e_cross_screen t_cross_screen;
 
 struct s_le_state
 {
-	bool			opt_colosyn;
-	bool			le_is_init;
-	int				prompt_type;
+	t_kno	le_char_delim;
+	bool	opt_colosyn;
+	bool	le_is_init;
+	int		prompt_type;
 };
 
 /*

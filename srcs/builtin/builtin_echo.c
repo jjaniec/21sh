@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/25 17:33:25 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/11/01 15:27:41 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/11/19 18:05:33 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,13 @@ void		builtin_echo(char **argv, t_environ *env, t_exec *exe)
 	argv++;
 	while (*argv)
 	{
-		ft_putstr(*argv);
+		if (write(STDOUT_FILENO, *argv, ft_strlen(*argv)) == -1)
+		{
+			if (errno == EBADF)
+				ft_putstr_fd(SH_NAME": write error: "ERR_BAD_FILEDESC, 2);
+			exe->ret = 1;
+			return ;
+		}
 		if (argv[1])
 			ft_putchar(' ');
 		argv++;

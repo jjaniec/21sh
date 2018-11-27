@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/04 18:30:50 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/11/09 17:09:17 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/11/19 17:36:20 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,26 @@
 
 /*
 ** Handle input redirections
-** For here-doc redirections, init a temporary pipe w/
+** For TK_TLESS redirections, init a temporary pipe w/
 ** file descs stored in redir node data,
 ** then write content of here document in input, close it and redir
 ** stdin to pipe output
 */
 
-static void		handle_input_redir(int prefix_fd, char *target, \
+static int		handle_input_redir(int prefix_fd, char *target_data, \
 					size_t tk_type_details, t_ast *node)
 {
 	int		fd;
 
-	if (prefix_fd == -1)
-		prefix_fd = DEFAULT_INPUT_REDIR_FD;
 	if (tk_type_details == TK_LESS)
 	{
-		if ((fd = open(target, O_RDONLY, 0)) == -1)
-			handle_open_error(errno, target);
+		if ((fd = open(target_data, O_RDONLY, 0)) == -1)
+			return (-handle_open_error(errno, target_data));
 		else
+		{
+			log_debug("File %s opened as fd: %d", target_data, fd);
 			handle_redir_fd(prefix_fd, fd);
+		}
 	}
 	else if (tk_type_details == TK_DLESS || \
 			tk_type_details == TK_TLESS)
@@ -47,30 +48,37 @@ static void		handle_input_redir(int prefix_fd, char *target, \
 			node->right->data[0], *(&(node->data[1][sizeof(int)])));
 		handle_redir_fd(STDIN_FILENO, *(&(node->data[1][0])));
 	}
+	return (0);
 }
 
 /*
 ** Handle output redirections
 */
 
-static void		handle_output_redir(int prefix_fd, \
-					char *target, size_t tk_type_details)
+static int		handle_output_redir(int prefix_fd, \
+					char *target_data, size_t tk_type_details)
 {
 	int		fd;
+	int		open_mode;
 
-	fd = -1;
-	if (prefix_fd == -1)
-		prefix_fd = DEFAULT_OUTPUT_REDIR_FD;
+	open_mode = 0;
 	if (tk_type_details == TK_GREAT)
-		fd = open(target, O_WRONLY | O_CREAT | O_TRUNC, \
-			DEFAULT_OUTPUT_REDIR_FILE_MODE);
+		open_mode = TK_GREAT_OPEN_ATTR;
 	else if (tk_type_details == TK_DGREAT)
-		fd = open(target, O_WRONLY | O_CREAT | O_APPEND, \
-			DEFAULT_OUTPUT_REDIR_FILE_MODE);
-	if (fd == -1)
-		handle_open_error(errno, target);
-	else
-		handle_redir_fd(prefix_fd, fd);
+		open_mode = TK_DGREAT_OPEN_ATTR;
+	else if (tk_type_details == TK_LESSGREAT)
+		open_mode = TK_LESSGREAT_OPEN_ATTR;
+	if (open_mode)
+	{
+		if ((fd = open(target_data, open_mode, DEFAULT_OUTPUT_REDIR_FILE_MODE)) == -1)
+			return (-handle_open_error(errno, target_data));
+		else
+		{
+			log_debug("File %s opened as fd: %d", target_data, fd);
+			handle_redir_fd(prefix_fd, fd);
+		}
+	}
+	return (0);
 }
 
 /*
@@ -81,35 +89,50 @@ static void		handle_output_redir(int prefix_fd, \
 ** if operator contains a '&' like ">&"
 */
 
-static void		handle_redir(int prefix_fd, t_ast *node)
+static int		handle_redir(int prefix_fd, char *target_data, \
+					int target_fd, t_ast *node)
 {
-	char	*target;
+	int		r = -2;
 
-	handle_quotes_expansions(node->right->data);
-	target = node->right->data[0];
-	if ((node->type_details == TK_LESSAND \
-		|| node->type_details == TK_GREATAND) && \
-		ft_str_is_positive_numeric(target))
-		{
-			close(prefix_fd);
-			if (node->data[0][2] != '-')
-				dup(ft_atoi(target));
-		//	handle_redir_fd(prefix_fd, ft_atoi(target));
-		}
-	else
+	log_trace("Handle redir prefix_fd: %d - parsed target_fd: %d for target_data string: |%s| - node: %p", prefix_fd, target_fd, target_data, node);
+	if (!(node->type_details == TK_LESSAND \
+		|| node->type_details == TK_GREATAND))
 	{
-		if (ft_strchr(node->data[0], '<'))
-			handle_input_redir(prefix_fd, target, node->type_details, node);
 		if (ft_strchr(node->data[0], '>'))
-			handle_output_redir(prefix_fd, target, node->type_details);
+			r = handle_output_redir(prefix_fd, target_data, node->type_details);
+		if ((!r || r == -2) && ft_strchr(node->data[0], '<') && \
+			node->type_details != TK_LESSGREAT)
+			r = handle_input_redir(prefix_fd, target_data, node->type_details, node);
 	}
+	else if (target_fd != -1)
+	{
+		errno = 0;
+		log_debug("Duplicating target fd %d for filedesc redirect to prefix fd %d - td: %d", target_fd, prefix_fd, node->type_details);
+		r = dup2(target_fd, prefix_fd);
+		if (r == -1)
+		{
+			ft_putstr_fd(SH_NAME": ", 2);
+			ft_putnbr_fd(target_fd, 2);
+			ft_putstr_fd(": "ERR_BAD_FILEDESC, 2);
+		}
+		return (r);
+	}
+	return (r);
 }
 
-static void		get_prefix_fd(int *prefix_fd, char *data)
+static void		get_specified_fds(int *prefix_fd, char *data, \
+					int *target_fd, char *target_data)
 {
-	*prefix_fd = ft_atoi(data);
-	if (*prefix_fd == 0 && !(data[0] == '0'))
-		*prefix_fd = -1;
+	if (*data == '<')
+		*prefix_fd = DEFAULT_INPUT_REDIR_FD;
+	else if (*data == '>')
+		*prefix_fd = DEFAULT_OUTPUT_REDIR_FD;
+	else
+		*prefix_fd = ft_atoi(data);
+	if (*target_data == '-')
+		*target_fd = -1;
+	else
+		*target_fd = ft_atoi(target_data);
 }
 
 /*
@@ -118,21 +141,36 @@ static void		get_prefix_fd(int *prefix_fd, char *data)
 ** and call handle_redir for each
 */
 
-void			handle_redirs(t_ast *redir_ast_node)
+int				handle_redirs(t_ast *redir_ast_node)
 {
 	t_ast	*node;
 	int		prefix_fd;
+	int		target_fd;
+	char	*target_data;
+	int		new_fd;
 
 	node = redir_ast_node->parent;
 	log_info("PID %zu: Handle redirs of %s(t %d td %d)", getpid(), redir_ast_node->data[0], \
 			redir_ast_node->type, redir_ast_node->type_details);
-	while (node && node->parent && node->parent->type == T_REDIR_OPT) //->
-		node = node->parent; //->
 	while (node && node->type == T_REDIR_OPT)
 	{
-		get_prefix_fd(&prefix_fd, node->data[0]);
-		handle_redir(prefix_fd, node);
-		node = node->left;
-		//node = node->parent;
+		if (check_redir_suffix_validity(node))
+			return (1);
+		target_data = node->right->data[0];
+		get_specified_fds(&prefix_fd, node->data[0], &target_fd, target_data);
+		if (-1 == (new_fd = handle_redir(prefix_fd, target_data, target_fd, node)))
+			return (1);
+		if ((node->type_details == TK_LESSAND \
+			|| node->type_details == TK_GREATAND) && \
+			ft_strchr(target_data, '-'))
+		{
+			log_debug("Handle fd close - target fd %d - prefix fd %d", target_fd, prefix_fd);
+			if (target_fd != -1 && !(fcntl(target_fd, F_GETFL) < 0 && errno == EBADF))
+				log_close(target_fd);
+			else if (prefix_fd != -1 && prefix_fd != new_fd && !(fcntl(prefix_fd, F_GETFL) < 0 && errno == EBADF))
+				log_close(prefix_fd);
+		}
+		node = node->parent;
 	}
+	return (0);
 }

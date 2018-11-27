@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/21 16:55:55 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/11/11 19:41:48 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/11/16 19:52:28 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,19 +87,21 @@ static void	ast_tree_diff(int test_nbr, char *str)
 	save_stdout = dup(1);
 	close(1);
 	open("tests/ast_tree/A.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-
-	if (lexer((a_mort_brubru_qui_free_jamais = ft_xstrjoin(str, ft_strdup("\n"))), &tmp, NULL))
+	root = NULL;
+	if (lexer((a_mort_brubru_qui_free_jamais = ft_xstrjoin(str, "\n")), &tmp, NULL))
 	{
 		root = ast(&tmp);
 		ast_debug(root, 0);
 	}
-
 	close(1);
 	dup2(save_stdout, 1);
 	close(save_stdout);
 	ret = system(cmd);
 	ok(!ret, "AST tree construction");
-	free (cmd);
+	free(cmd);
+	ast_free(root);
+	free_lexemes(tmp);
+	free(a_mort_brubru_qui_free_jamais);
 }
 
 void	ast_tree(void)

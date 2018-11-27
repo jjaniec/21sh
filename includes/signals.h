@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/20 12:34:09 by cyfermie          #+#    #+#             */
-/*   Updated: 2018/10/28 13:50:24 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/11/09 17:14:01 by cyfermie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ struct s_cmd_status
 	bool			resize_happened;
 	bool			sigint_happened;
 	bool			interactive_mode;
+	bool			builtin_running;
 };  
 
 extern struct s_cmd_status  g_cmd_status;

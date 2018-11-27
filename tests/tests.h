@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/15 13:50:09 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/11/11 18:01:01 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/11/16 20:25:34 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,17 @@
 # include <forty_two_sh.h>
 # include "../libtap/tap.h"
 
-# ifdef __linux__
-#  define MODE "Linux"
+# ifndef CI_TEST
+#  define CI_TEST 0
 # endif
+
 # ifndef MODE
-#  define MODE "Apple"
+#  ifdef __linux__
+#   define MODE "Linux"
+#  endif
+#  ifndef MODE
+#   define MODE "Apple"
+#  endif
 # endif
 
 # define TESTS_TMP_FILENAME "/tmp/42sh_tests_tmp.txt"

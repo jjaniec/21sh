@@ -66,8 +66,4 @@ void	init_signals(void)
 	}
 	new.sa_handler = SIG_IGN;
 	sigaction(SIGTTOU, &new, NULL);
-	sigaction(SIGTERM, &new, NULL);
-	sigaction(SIGTSTP, &new, NULL);
-	new.sa_handler = SIG_DFL;
-	sigaction(SIGCHLD, &new, NULL);
 }

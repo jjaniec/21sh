@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/08 16:19:04 by cyfermie          #+#    #+#             */
-/*   Updated: 2018/11/13 19:00:18 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/11/18 16:48:52 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ void		load_aliases_file(struct s_alias *alias)
 	}
 	copy_file_datas_in_aliases_list(alias, fd);
 	close(fd);
+//	free((char *)alias_file_path);
+//	alias_file_path = NULL;
 }
 
 /*

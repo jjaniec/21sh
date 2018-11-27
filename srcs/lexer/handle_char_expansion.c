@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/19 16:38:44 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/11/08 19:56:13 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/11/14 19:43:29 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ static char		*get_env_var_value(char *ptr, t_shell_vars *vars, int *expansion_na
 		return (NULL);
 	var_value = NULL;
 	exp_end_ptr = get_expansion_end(ptr + 1);
-	if (exp_end_ptr == ptr + 1)
+	if (exp_end_ptr == ptr + sizeof(char) && *exp_end_ptr == '$')
+		exp_end_ptr += sizeof(char);
+	if (exp_end_ptr == ptr + sizeof(char))
 		return (NULL);
 	exp_end_ptr_char = *(exp_end_ptr);
 	(*exp_end_ptr) = '\0';
@@ -85,6 +87,7 @@ void			handle_dollar_expansion(t_lexeme_clean_data *l, t_shell_vars *vars)
 	else if (ft_strchr(IFS"'\""EXPANSIONS_END_CHARS, *(*(l->raw_lexeme_read_ptr) + sizeof(char))))
 	{
 		*(l->clean_data_write_ptr++) = '$';
+		*(l->clean_data_write_ptr) = '\0';
 		*(l->raw_lexeme_read_ptr) += sizeof(char);
 		return ;
 	}

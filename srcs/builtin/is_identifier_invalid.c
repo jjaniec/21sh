@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/09 15:13:34 by jjaniec           #+#    #+#             */
-/*   Updated: 2018/10/09 15:32:36 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/11/14 19:51:50 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int		is_identifier_invalid(char *str, char *assign_ptr)
 {
 	char	*identifier_begin;
 
-	if (!(str))
+	if (!(str) || (*str >= '0' && *str <= '9'))
 		return (1);
 	identifier_begin = str;
 	while (*identifier_begin && \

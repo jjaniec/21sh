@@ -6,7 +6,7 @@
 /*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/26 17:16:41 by sbrucker          #+#    #+#             */
-/*   Updated: 2018/10/13 19:52:55 by jjaniec          ###   ########.fr       */
+/*   Updated: 2018/11/16 19:56:36 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,12 @@ static	void exec(char *input)
 	lexer(input, &lex, NULL);
 	ast_root = ast(&lex);
 	exe = create_exec(g_env);
+	free_lexemes(lex);
 	if (!ast_root)
 		return ;
-	exe = create_exec(g_env);
 	exe = exec_cmd(ast_root, exe);
 	ast_free(ast_root);
-	free_lexemes(lex);
-	free(exe);
+	free_exec(&exe);
 }
 
 static void test_framework(char *str_test, char *expected_stdout, char *test_name)
@@ -41,7 +40,8 @@ static void test_framework(char *str_test, char *expected_stdout, char *test_nam
 	char	*tmp;
 
 	redirect_both_fds(&backup_stdout_fd, &backup_stderr_fd, NULL, NULL);
-	exec(ft_strjoin(str_test, " && echo 0 || echo 1\n"));
+	exec((tmp = ft_strjoin(str_test, " && echo 0 || echo 1\n")));
+	free(tmp);
 	compare_fds_with_strings(test_name, (tmp = ft_strjoin(expected_stdout, "\n")), NULL, backup_stdout_fd, backup_stderr_fd);
 	remove(redirect_both_fds_STDOUT_FILENAME);
 	remove(redirect_both_fds_STDERR_FILENAME);

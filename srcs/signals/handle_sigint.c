@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_sigint.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jjaniec <jjaniec@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/28 16:02:08 by cfermier          #+#    #+#             */
-/*   Updated: 2018/11/20 20:31:31 by cyfermie         ###   ########.fr       */
+/*   Updated: 2018/11/27 12:08:20 by jjaniec          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	handle_sigint(int sig)
 	}
 
 	receiver_pid = getpid();
-	if (sig != SIGINT)
+	if (sig != SIGINT || g_cmd_status.builtin_running == true)
 		return ;
 	log_debug("PID %d: Got sig SIGINT", receiver_pid);
 	if (g_jobs && g_jobs->first_process)
@@ -70,7 +70,7 @@ void	handle_sigint(int sig)
 				ft_printf(SH_NAME": Sending SIGINT to pgid %d\n", g_jobs->pgid);
 				if (killpg(g_jobs->pgid, sig) == -1)
 				{
-					write(STDERR_FILENO, SH_NAME": Cannot kill pgid: ", 22);
+					write(STDERR_FILENO, SH_NAME": Cannot kill pgid: ", 24);
 					ft_putnbr_fd(g_jobs->pgid, STDERR_FILENO);
 					write(STDERR_FILENO, "\n", 1);
 				}
@@ -96,6 +96,4 @@ void	handle_sigint(int sig)
 			tputs(le->tcaps->up, 1, &write_one_char);
 		}
 	}
-	//{ le_debug("%s - %d\n", "END SIGINT HANDLER", getpid()) }
-	//{ le_debug("END HANDLER SIGINT PID %i PPID %i\n", (int) getpid(), (int) getppid() ) } // debug
 }

@@ -6,7 +6,7 @@
 /*   By: cyfermie <cyfermie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/25 16:42:45 by sebastien         #+#    #+#             */
-/*   Updated: 2018/10/26 13:21:19 by sbrucker         ###   ########.fr       */
+/*   Updated: 2018/11/19 19:01:32 by sbrucker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,11 @@ static t_lexeme	*create_sub_ast(t_lexeme *lex, t_ast **root, \
 	end_lexeme = find_end_lexeme(lex, next_tokens);
 	if (!end_lexeme)
 		return (NULL);
-	lex = lex->next;
-	if (lex == end_lexeme)
-		log_warn("Find end lexeme: end_lexeme is the same than start.");
+	if (lex->type == T_WORD)
+		while (lex && lex->type == T_WORD)
+			lex = lex->next;
+	else
+		lex = lex->next;
 	root[0]->sub_ast = ast_constructor(&lex, root[0]->sub_ast, end_lexeme, node_placer);
 	root[0]->sub_ast->top_ast = root[0];
 	return (lex);
@@ -63,8 +65,6 @@ t_lexeme		*need_subast(t_lexeme *lex, t_ast **root, t_ast *new, \
 			root[0]->sub_ast = create_node(T_CTRL_OPT, TK_SEMICOLON, NULL);
 			save = lex;
 			put_node(&save, &(root[0]->sub_ast), new, g_node_placer[i]);
-			while (lex && lex->type == T_WORD)
-				lex = lex->next;
 			return (create_sub_ast(lex, root, g_next_tokens[i], \
 				g_node_placer[i]));
 		}
